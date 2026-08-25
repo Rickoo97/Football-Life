@@ -5,6 +5,8 @@
  * and the overall game state (calendar, action points, event log).
  */
 
+import type { MatchReport } from "@/lib/engine/matchEngine";
+
 // ---------------------------------------------------------------------------
 // Player
 // ---------------------------------------------------------------------------
@@ -33,10 +35,14 @@ export interface PlayerAttributes {
   shooting: number;
   /** Passing and vision. */
   passing: number;
-  /** Strength, stamina and physical duels. */
+  /** Strength and physical duels. */
   physical: number;
   /** Sprint speed / acceleration ("tempo"). */
   pace: number;
+  /** Ball control, dribbling and first touch ("techniek"). */
+  technique: number;
+  /** Endurance, determines how well energy holds up over 90 minutes. */
+  stamina: number;
 }
 
 export interface Player {
@@ -126,10 +132,14 @@ export interface GameState {
   actionPoints: number;
   /** Action points the player is granted at the start of every week. */
   maxActionPointsPerWeek: number;
+  /** Personal bank balance in euros. */
+  balance: number;
   /** The player character controlled by the user. */
   player: Player;
   /** The club the player currently belongs to. */
   club: Club;
   /** Chronological log of everything that has happened in the save. */
   eventLog: GameEvent[];
+  /** Report of the most recently played match, if any. */
+  lastMatchReport: MatchReport | null;
 }

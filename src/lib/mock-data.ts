@@ -29,6 +29,8 @@ export function createMockPlayer(clubId: string): Player {
       passing: 63,
       physical: 52,
       pace: 67,
+      technique: 66,
+      stamina: 61,
     },
     marketValue: 750_000,
     weeklySalary: 4_500,
@@ -76,8 +78,10 @@ export function createInitialGameState(): GameState {
     season,
     actionPoints: 3,
     maxActionPointsPerWeek: 3,
+    balance: 42_500,
     player: createMockPlayer(club.id),
     club,
     eventLog: createMockEventLog(season),
+    lastMatchReport: null,
   };
 }

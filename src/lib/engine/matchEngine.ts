@@ -160,11 +160,16 @@ function computeImpactScore(player: PlayerMatchContext): number {
   const passing = normalizeRating(player.attributes.passing);
   const physical = normalizeRating(player.attributes.physical);
   const pace = normalizeRating(player.attributes.pace);
+  const technique = normalizeRating(player.attributes.technique);
   const morale = normalizeRating(player.morale);
   const energy = normalizeRating(player.energy);
 
   const technical =
-    shooting * 0.36 + passing * 0.28 + physical * 0.2 + pace * 0.16;
+    shooting * 0.28 +
+    passing * 0.22 +
+    technique * 0.2 +
+    physical * 0.15 +
+    pace * 0.15;
   const condition = morale * 0.46 + energy * 0.54;
   const positionWeight = getPositionAttackWeight(player.position);
 
@@ -245,6 +250,7 @@ export function simulateMatch(
   const shooting = normalizeRating(player.attributes.shooting);
   const passing = normalizeRating(player.attributes.passing);
   const physical = normalizeRating(player.attributes.physical);
+  const stamina = normalizeRating(player.attributes.stamina);
   const attackPositionWeight = getPositionAttackWeight(player.position);
 
   const playerStats = {
@@ -403,7 +409,7 @@ export function simulateMatch(
   const involvementFatigue = playerStats.chanceInvolvements * 1.05;
   const disciplineFatigue = playerStats.yellowCards * 1.5;
   const lowEnergyPenalty = Math.max(0, 70 - player.energy) * 0.1;
-  const physicalMitigation = physical * 7;
+  const physicalMitigation = physical * 3 + stamina * 9;
 
   const fatigueIncrease = clamp(
     roundToOneDecimal(

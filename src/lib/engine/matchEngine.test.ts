@@ -41,6 +41,8 @@ const BASE_PLAYER: PlayerMatchContext = {
     passing: 74,
     physical: 63,
     pace: 71,
+    technique: 72,
+    stamina: 65,
   },
 };
 
@@ -90,6 +92,8 @@ describe("simulateMatch", () => {
         passing: 90,
         physical: 84,
         pace: 90,
+        technique: 91,
+        stamina: 86,
       },
       morale: 88,
       energy: 95,
@@ -102,6 +106,8 @@ describe("simulateMatch", () => {
         passing: 42,
         physical: 45,
         pace: 44,
+        technique: 41,
+        stamina: 46,
       },
       morale: 45,
       energy: 50,
@@ -135,5 +141,31 @@ describe("simulateMatch", () => {
 
     expect(tired.player.fatigueIncrease).toBeGreaterThan(fresh.player.fatigueIncrease);
     expect(tired.player.endingEnergy).toBeLessThan(fresh.player.endingEnergy);
+  });
+
+  it("lets stamina reduce the fatigue increase", () => {
+    const lowStamina = simulateMatch(
+      HOME_TEAM,
+      AWAY_TEAM,
+      {
+        ...BASE_PLAYER,
+        attributes: { ...BASE_PLAYER.attributes, stamina: 30 },
+      },
+      { seed: 91 }
+    );
+
+    const highStamina = simulateMatch(
+      HOME_TEAM,
+      AWAY_TEAM,
+      {
+        ...BASE_PLAYER,
+        attributes: { ...BASE_PLAYER.attributes, stamina: 95 },
+      },
+      { seed: 91 }
+    );
+
+    expect(highStamina.player.fatigueIncrease).toBeLessThan(
+      lowStamina.player.fatigueIncrease
+    );
   });
 });
