@@ -21,6 +21,7 @@ const ATTRIBUTE_LABELS: Array<{ key: keyof PlayerAttributes; label: string }> = 
   { key: "pace", label: "Tempo" },
   { key: "shooting", label: "Schieten" },
   { key: "passing", label: "Passing" },
+  { key: "defending", label: "Verdedigen" },
   { key: "technique", label: "Techniek" },
   { key: "physical", label: "Fysiek" },
   { key: "stamina", label: "Conditie" },

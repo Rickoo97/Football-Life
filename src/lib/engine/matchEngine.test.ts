@@ -39,6 +39,7 @@ const BASE_PLAYER: PlayerMatchContext = {
   attributes: {
     shooting: 70,
     passing: 74,
+    defending: 48,
     physical: 63,
     pace: 71,
     technique: 72,
@@ -90,6 +91,7 @@ describe("simulateMatch", () => {
       attributes: {
         shooting: 92,
         passing: 90,
+        defending: 70,
         physical: 84,
         pace: 90,
         technique: 91,
@@ -104,6 +106,7 @@ describe("simulateMatch", () => {
       attributes: {
         shooting: 40,
         passing: 42,
+        defending: 35,
         physical: 45,
         pace: 44,
         technique: 41,

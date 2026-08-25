@@ -22,12 +22,14 @@ export function createMockPlayer(clubId: string): Player {
     id: "player-you",
     name: "Sem de Vries",
     age: 19,
+    nationality: "NL",
     position: "CAM",
     energy: 92,
     morale: 70,
     attributes: {
       shooting: 58,
       passing: 63,
+      defending: 44,
       physical: 52,
       pace: 67,
       technique: 66,
@@ -88,5 +90,6 @@ export function createInitialGameState(): GameState {
     seasonStats: createInitialSeasonStats(player.marketValue),
     pendingSeasonTransition: null,
     activeNegotiation: null,
+    careerStarted: false,
   };
 }

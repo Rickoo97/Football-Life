@@ -7,12 +7,14 @@ const STAR_PLAYER: Player = {
   id: "player-star",
   name: "Star Speler",
   age: 25,
+  nationality: "NL",
   position: "ST",
   energy: 90,
   morale: 75,
   attributes: {
     shooting: 88,
     passing: 82,
+    defending: 45,
     physical: 80,
     pace: 85,
     technique: 86,
@@ -29,6 +31,7 @@ const ROOKIE_PLAYER: Player = {
   attributes: {
     shooting: 40,
     passing: 45,
+    defending: 38,
     physical: 42,
     pace: 48,
     technique: 44,
@@ -102,6 +105,7 @@ describe("pickInterestedClub", () => {
       attributes: {
         shooting: 1,
         passing: 1,
+        defending: 1,
         physical: 1,
         pace: 1,
         technique: 1,

@@ -21,6 +21,7 @@ function mergeAttributes(
   return {
     shooting: numberOr(saved?.shooting, defaults.shooting),
     passing: numberOr(saved?.passing, defaults.passing),
+    defending: numberOr(saved?.defending, defaults.defending),
     physical: numberOr(saved?.physical, defaults.physical),
     pace: numberOr(saved?.pace, defaults.pace),
     technique: numberOr(saved?.technique, defaults.technique),
@@ -85,6 +86,7 @@ export function mergePersistedGameState<T extends GameState>(
     ),
     balance: numberOr(saved.balance, defaults.balance),
     lastMatchReport: saved.lastMatchReport ?? null,
+    careerStarted: saved.careerStarted === true,
     eventLog: Array.isArray(saved.eventLog) ? saved.eventLog : defaults.eventLog,
     seasonStats: mergeSeasonStats(saved.seasonStats, defaults.seasonStats),
     pendingSeasonTransition: saved.pendingSeasonTransition

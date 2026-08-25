@@ -2,6 +2,7 @@ import {
   GREEDY_OVERREACH_THRESHOLD,
   pickAgentDialogue,
 } from "@/data/agentDialogues";
+import { getPositionAttackWeight } from "@/lib/engine/matchEngine";
 import { formatCurrency } from "@/lib/game/formatters";
 import type { Club, GameEventType, Player } from "@/types/game";
 import type {
@@ -33,10 +34,17 @@ function isFiniteNumber(value: unknown): value is number {
 
 /** Overall rating (1-100) derived from a player's attributes, used as a value proxy. */
 export function computePlayerRating(player: Player): number {
-  const { shooting, passing, physical, pace, technique, stamina } =
+  const { shooting, passing, defending, physical, pace, technique, stamina } =
     player.attributes;
-  const average =
+
+  // Defenders are valued on their defending, strikers barely at all, so a
+  // centre-back isn't punished for being a poor finisher.
+  const defensiveShare = (1 - getPositionAttackWeight(player.position)) * 0.35;
+  const outfieldSkill =
     (shooting + passing + physical + pace + technique + stamina) / 6;
+  const average =
+    outfieldSkill * (1 - defensiveShare) + defending * defensiveShare;
+
   return Math.round(clampNumber(average, 1, 100));
 }
 

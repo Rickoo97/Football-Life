@@ -37,6 +37,8 @@ export interface PlayerAttributes {
   shooting: number;
   /** Passing and vision. */
   passing: number;
+  /** Tackling, positioning and defensive duels ("verdedigen"). */
+  defending: number;
   /** Strength and physical duels. */
   physical: number;
   /** Sprint speed / acceleration ("tempo"). */
@@ -51,6 +53,8 @@ export interface Player {
   id: string;
   name: string;
   age: number;
+  /** Country the player represents, as an ISO 3166-1 alpha-2 code. */
+  nationality: string;
   position: PlayerPosition;
   /** Current energy/stamina level (0-100). Depletes with matches & training. */
   energy: number;
@@ -154,4 +158,10 @@ export interface GameState {
   pendingSeasonTransition: SeasonTransition | null;
   /** The in-progress contract negotiation with an interested club, if any. */
   activeNegotiation: NegotiationSession | null;
+  /**
+   * Whether the player finished the "New Game" onboarding. Saves created
+   * before onboarding existed load as `false`, which sends the user to the
+   * creation screen instead of a dashboard full of placeholder data.
+   */
+  careerStarted: boolean;
 }

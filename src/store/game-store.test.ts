@@ -19,6 +19,85 @@ beforeEach(() => {
   useGameStore.getState().resetGame();
 });
 
+describe("createCareer", () => {
+  it("stores the player from the onboarding form and marks the career as started", () => {
+    useGameStore.getState().createCareer({
+      firstName: "Sem",
+      lastName: "de Vries",
+      nationality: "NL",
+      position: "attacker",
+    });
+
+    const state = useGameStore.getState();
+    expect(state.careerStarted).toBe(true);
+    expect(state.player.name).toBe("Sem de Vries");
+    expect(state.player.nationality).toBe("NL");
+    expect(state.player.position).toBe("ST");
+    expect(state.player.attributes.shooting).toBeGreaterThan(
+      state.player.attributes.defending
+    );
+    expect(state.player.clubId).toBe(state.club.id);
+  });
+
+  it("generates opposite profiles for a defender and an attacker", () => {
+    useGameStore.getState().createCareer({
+      firstName: "Ruud",
+      lastName: "Bakker",
+      nationality: "NL",
+      position: "defender",
+    });
+    const defender = useGameStore.getState().player;
+
+    useGameStore.getState().createCareer({
+      firstName: "Ruud",
+      lastName: "Bakker",
+      nationality: "NL",
+      position: "attacker",
+    });
+    const attacker = useGameStore.getState().player;
+
+    expect(defender.attributes.defending).toBeGreaterThan(
+      attacker.attributes.defending
+    );
+    expect(attacker.attributes.shooting).toBeGreaterThan(
+      defender.attributes.shooting
+    );
+  });
+
+  it("wipes the previous save instead of continuing it", () => {
+    useGameStore.getState().playNextWeek();
+    useGameStore.getState().playNextWeek();
+
+    useGameStore.getState().createCareer({
+      firstName: "Nieuwe",
+      lastName: "Start",
+      nationality: "BE",
+      position: "midfielder",
+    });
+
+    const state = useGameStore.getState();
+    expect(state.currentWeek).toBe(1);
+    expect(state.seasonStats.matchesPlayed).toBe(0);
+    expect(state.lastMatchReport).toBeNull();
+    expect(state.eventLog).toHaveLength(1);
+    expect(state.seasonStats.startingMarketValue).toBe(state.player.marketValue);
+  });
+});
+
+describe("resetGame", () => {
+  it("sends the player back to onboarding", () => {
+    useGameStore.getState().createCareer({
+      firstName: "Sem",
+      lastName: "de Vries",
+      nationality: "NL",
+      position: "attacker",
+    });
+
+    useGameStore.getState().resetGame();
+    expect(useGameStore.getState().careerStarted).toBe(false);
+  });
+});
+
 describe("playNextWeek", () => {
   it("advances the calendar, refills action points and pays the salary", () => {
     const before = useGameStore.getState();
