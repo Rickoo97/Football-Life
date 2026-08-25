@@ -6,6 +6,7 @@ import { ClubCard } from "@/components/game/club-card";
 import { EventLogCard } from "@/components/game/event-log-card";
 import { NextWeekCard } from "@/components/game/next-week-card";
 import { PlayerCard } from "@/components/game/player-card";
+import { SeasonTransitionDialog } from "@/components/game/season-transition-dialog";
 import { TopBar } from "@/components/game/top-bar";
 import { WeeklyActionsCard } from "@/components/game/weekly-actions-card";
 import { useGameStore } from "@/store/game-store";
@@ -52,6 +53,7 @@ export function GameDashboard() {
       </div>
 
       <EventLogCard />
+      <SeasonTransitionDialog />
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import { createSeededRandom } from "@/lib/random";
 import type { PlayerAttributes, PlayerPosition } from "@/types/game";
 
 export type MatchSide = "home" | "away";
@@ -78,20 +79,6 @@ function clamp(value: number, min: number, max: number): number {
 
 function roundToOneDecimal(value: number): number {
   return Math.round(value * 10) / 10;
-}
-
-function xorshift32(seed: number): () => number {
-  let state = seed >>> 0;
-  if (state === 0) {
-    state = 0x6d2b79f5;
-  }
-
-  return () => {
-    state ^= state << 13;
-    state ^= state >>> 17;
-    state ^= state << 5;
-    return ((state >>> 0) % 1_000_000) / 1_000_000;
-  };
 }
 
 function normalizeRating(value: number): number {
@@ -231,7 +218,7 @@ export function simulateMatch(
   options: MatchSimulationOptions = {}
 ): MatchReport {
   const seed = options.seed ?? Date.now();
-  const random = xorshift32(seed);
+  const random = createSeededRandom(seed);
 
   const homeTeam = { ...homeTeamInput, ratings: ensureTeamRatings(homeTeamInput) };
   const awayTeam = { ...awayTeamInput, ratings: ensureTeamRatings(awayTeamInput) };

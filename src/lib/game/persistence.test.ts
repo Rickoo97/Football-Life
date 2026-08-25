@@ -73,10 +73,55 @@ describe("mergePersistedGameState", () => {
     expect(isFiniteNumber(merged.player.attributes.stamina)).toBe(true);
     expect(isFiniteNumber(merged.balance)).toBe(true);
     expect(merged.lastMatchReport).toBeNull();
+    expect(merged.pendingSeasonTransition).toBeNull();
+    expect(isFiniteNumber(merged.seasonStats.matchesPlayed)).toBe(true);
+    expect(isFiniteNumber(merged.seasonStats.startingMarketValue)).toBe(true);
 
     Object.values(merged.player.attributes).forEach((value) => {
       expect(isFiniteNumber(value)).toBe(true);
     });
+  });
+
+  it("repairs a season transition that is missing its essentials", () => {
+    const current = createInitialGameState();
+    const saved = {
+      ...createInitialGameState(),
+      pendingSeasonTransition: { summary: { season: "not-a-number" } },
+    };
+
+    const merged = mergePersistedGameState(saved, current);
+    expect(merged.pendingSeasonTransition).toBeNull();
+  });
+
+  it("keeps a well-formed pending season transition", () => {
+    const current = createInitialGameState();
+    const transition = {
+      summary: {
+        season: 2026,
+        matchesPlayed: 38,
+        goals: 10,
+        assists: 5,
+        averageRating: 7.2,
+        startingMarketValue: 500_000,
+        endingMarketValue: 900_000,
+        marketValueGrowth: 400_000,
+        trainerRelationship: 70,
+        clubName: "FC Utopia",
+      },
+      contractOffer: {
+        clubId: "club-fc-utopia",
+        clubName: "FC Utopia",
+        weeklySalary: 6_000,
+        durationYears: 2,
+        raisePercentage: 15,
+      },
+      transferOffers: [],
+    };
+
+    const saved = { ...createInitialGameState(), pendingSeasonTransition: transition };
+    const merged = mergePersistedGameState(saved, current);
+
+    expect(merged.pendingSeasonTransition).toEqual(transition);
   });
 
   it("replaces corrupted numbers left behind by a NaN save", () => {

@@ -2,8 +2,23 @@ import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
 import { simulateMatch, type MatchReport } from "@/lib/engine/matchEngine";
+import { MS_PER_WEEK, WEEKS_PER_SEASON } from "@/lib/game/constants";
 import { createFixture } from "@/lib/game/fixtures";
 import { mergePersistedGameState } from "@/lib/game/persistence";
+import {
+  deleteSaveSlot,
+  exportGameStateToJson,
+  importGameStateFromJson,
+  listSaveSlots,
+  readSaveSlot,
+  writeSaveSlot,
+} from "@/lib/game/save-slots";
+import {
+  applySeasonTransitionChoice,
+  createInitialSeasonStats,
+  createSeasonTransition,
+  recordMatchInSeasonStats,
+} from "@/lib/game/season";
 import {
   getWeeklyAction,
   resolveWeeklyAction,
@@ -12,9 +27,9 @@ import {
 } from "@/lib/game/weekly-actions";
 import { createInitialGameState } from "@/lib/mock-data";
 import type { Club, GameEvent, GameState, Player } from "@/types/game";
+import type { SaveSlotMetadata } from "@/types/save";
+import type { SeasonTransitionChoice } from "@/types/season";
 
-const WEEKS_PER_SEASON = 38;
-const MS_PER_WEEK = 7 * 24 * 60 * 60 * 1000;
 const WEEKLY_ENERGY_RECOVERY = 12;
 
 function addWeeks(isoDate: string, weeks: number): string {
@@ -42,6 +57,24 @@ function createEvent(
   };
 }
 
+/** Strips the action functions off the store so only plain data gets saved/exported. */
+function toPlainGameState(store: GameState): GameState {
+  return {
+    currentWeek: store.currentWeek,
+    currentDate: store.currentDate,
+    season: store.season,
+    actionPoints: store.actionPoints,
+    maxActionPointsPerWeek: store.maxActionPointsPerWeek,
+    balance: store.balance,
+    player: store.player,
+    club: store.club,
+    eventLog: store.eventLog,
+    lastMatchReport: store.lastMatchReport,
+    seasonStats: store.seasonStats,
+    pendingSeasonTransition: store.pendingSeasonTransition,
+  };
+}
+
 export interface GameActions {
   /** Spends `amount` action points if enough are available. Returns whether it succeeded. */
   spendActionPoints: (amount: number) => boolean;
@@ -52,9 +85,13 @@ export interface GameActions {
   performWeeklyAction: (actionId: WeeklyActionId) => WeeklyActionResult | null;
   /**
    * Ends the current week: simulates this week's match, applies the outcome to
-   * the player, pays the weekly salary and moves the calendar forward.
+   * the player, pays the weekly salary and moves the calendar forward. After
+   * week 38 this also populates `pendingSeasonTransition` with a contract
+   * evaluation and any transfer offers.
    */
   playNextWeek: () => MatchReport;
+  /** Applies the player's contract/transfer decision and clears the pending transition. */
+  resolveSeasonTransition: (choice: SeasonTransitionChoice) => void;
   /** Merges `updates` into the current player. */
   updatePlayer: (updates: Partial<Player>) => void;
   /** Merges `updates` into the current player's attributes. */
@@ -70,6 +107,18 @@ export interface GameActions {
   dismissMatchReport: () => void;
   /** Resets the whole save back to the initial mock state. */
   resetGame: () => void;
+  /** Writes the current state to a named save slot (creates a new one if `slotId` is omitted). */
+  saveToSlot: (label: string, slotId?: string) => SaveSlotMetadata | null;
+  /** Loads a save slot into the store. Returns whether it succeeded. */
+  loadFromSlot: (slotId: string) => boolean;
+  /** Permanently removes a save slot. */
+  deleteSlot: (slotId: string) => void;
+  /** Lists every save slot, most recently saved first. */
+  listSlots: () => SaveSlotMetadata[];
+  /** Serializes the current state to a JSON string for download. */
+  exportSave: () => string;
+  /** Parses and loads a previously exported JSON save. Returns whether it succeeded. */
+  importSave: (json: string) => boolean;
 }
 
 export type GameStore = GameState & GameActions;
@@ -180,43 +229,88 @@ export const useGameStore = create<GameStore>()(
           const opponentName =
             fixture.playerSide === "home" ? report.awayTeam : report.homeTeam;
 
-          set((current) => ({
-            currentWeek: seasonRolledOver ? 1 : nextWeekNumber,
-            season: seasonRolledOver ? current.season + 1 : current.season,
-            currentDate: addWeeks(current.currentDate, 1),
-            actionPoints: current.maxActionPointsPerWeek,
-            balance: current.balance + current.player.weeklySalary,
-            lastMatchReport: report,
-            player: {
+          set((current) => {
+            const updatedPlayer: Player = {
               ...current.player,
-              energy: clamp(
-                report.player.endingEnergy + WEEKLY_ENERGY_RECOVERY
-              ),
+              energy: clamp(report.player.endingEnergy + WEEKLY_ENERGY_RECOVERY),
               morale: clamp(
                 current.player.morale + ratingDelta * 3 + resultMoraleBonus
               ),
               marketValue: Math.round(
                 current.player.marketValue * marketValueMultiplier
               ),
-            },
-            club: {
+            };
+
+            const updatedClub: Club = {
               ...current.club,
               trainerRelationship: clamp(
                 current.club.trainerRelationship + ratingDelta * 2
               ),
-            },
-            eventLog: [
-              ...current.eventLog,
-              createEvent(current, {
-                type: "match",
-                title: `${report.homeTeam} ${report.score.home}-${report.score.away} ${report.awayTeam}`,
-                description: `Tegen ${opponentName}: cijfer ${report.player.matchRating}, ${report.player.goals} goal(s) en ${report.player.assists} assist(s).`,
-              }),
-            ],
-          }));
+            };
+
+            const updatedSeasonStats = recordMatchInSeasonStats(current.seasonStats, {
+              goals: report.player.goals,
+              assists: report.player.assists,
+              matchRating: report.player.matchRating,
+            });
+
+            const matchLogEntry = createEvent(current, {
+              type: "match",
+              title: `${report.homeTeam} ${report.score.home}-${report.score.away} ${report.awayTeam}`,
+              description: `Tegen ${opponentName}: cijfer ${report.player.matchRating}, ${report.player.goals} goal(s) en ${report.player.assists} assist(s).`,
+            });
+
+            let pendingSeasonTransition = current.pendingSeasonTransition;
+            let seasonStats = updatedSeasonStats;
+
+            if (seasonRolledOver) {
+              pendingSeasonTransition = createSeasonTransition({
+                ...current,
+                player: updatedPlayer,
+                club: updatedClub,
+                seasonStats: updatedSeasonStats,
+              });
+              seasonStats = createInitialSeasonStats(updatedPlayer.marketValue);
+            }
+
+            return {
+              currentWeek: seasonRolledOver ? 1 : nextWeekNumber,
+              season: seasonRolledOver ? current.season + 1 : current.season,
+              currentDate: addWeeks(current.currentDate, 1),
+              actionPoints: current.maxActionPointsPerWeek,
+              balance: current.balance + current.player.weeklySalary,
+              lastMatchReport: report,
+              player: updatedPlayer,
+              club: updatedClub,
+              seasonStats,
+              pendingSeasonTransition,
+              eventLog: [...current.eventLog, matchLogEntry],
+            };
+          });
 
           return report;
         },
+
+        resolveSeasonTransition: (choice) =>
+          set((current) => {
+            if (!current.pendingSeasonTransition) {
+              return current;
+            }
+
+            const { player, club, logEntry } = applySeasonTransitionChoice(
+              current.player,
+              current.club,
+              current.pendingSeasonTransition,
+              choice
+            );
+
+            return {
+              player,
+              club,
+              pendingSeasonTransition: null,
+              eventLog: [...current.eventLog, createEvent(current, logEntry)],
+            };
+          }),
 
         updatePlayer: (updates) =>
           set((state) => ({ player: { ...state.player, ...updates } })),
@@ -240,6 +334,40 @@ export const useGameStore = create<GameStore>()(
         dismissMatchReport: () => set({ lastMatchReport: null }),
 
         resetGame: () => set(createInitialGameState()),
+
+        saveToSlot: (label, slotId) =>
+          writeSaveSlot(toPlainGameState(get()), label, { id: slotId }),
+
+        loadFromSlot: (slotId) => {
+          const loaded = readSaveSlot(slotId);
+          if (!loaded) {
+            return false;
+          }
+          set(loaded);
+          return true;
+        },
+
+        deleteSlot: (slotId) => deleteSaveSlot(slotId),
+
+        listSlots: () => listSaveSlots(),
+
+        exportSave: () => {
+          const state = get();
+          return exportGameStateToJson(
+            toPlainGameState(state),
+            `${state.player.name} - week ${state.currentWeek}, seizoen ${state.season}`
+          );
+        },
+
+        importSave: (json) => {
+          try {
+            const imported = importGameStateFromJson(json);
+            set(imported);
+            return true;
+          } catch {
+            return false;
+          }
+        },
       }),
       {
         name: "football-life-sim-save",

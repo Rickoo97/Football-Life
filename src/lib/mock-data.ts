@@ -1,3 +1,4 @@
+import { createInitialSeasonStats } from "@/lib/game/season";
 import type { Club, GameEvent, GameState, Player } from "@/types/game";
 
 /**
@@ -71,6 +72,7 @@ export function createMockEventLog(season: number): GameEvent[] {
 export function createInitialGameState(): GameState {
   const club = createMockClub();
   const season = 2026;
+  const player = createMockPlayer(club.id);
 
   return {
     currentWeek: 1,
@@ -79,9 +81,11 @@ export function createInitialGameState(): GameState {
     actionPoints: 3,
     maxActionPointsPerWeek: 3,
     balance: 42_500,
-    player: createMockPlayer(club.id),
+    player,
     club,
     eventLog: createMockEventLog(season),
     lastMatchReport: null,
+    seasonStats: createInitialSeasonStats(player.marketValue),
+    pendingSeasonTransition: null,
   };
 }
