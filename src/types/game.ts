@@ -76,7 +76,8 @@ export type Division =
   | "championship"
   | "la_liga"
   | "serie_a"
-  | "bundesliga";
+  | "bundesliga"
+  | "ligue_1";
 
 export interface Club {
   id: string;

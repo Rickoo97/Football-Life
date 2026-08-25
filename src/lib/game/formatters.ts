@@ -8,6 +8,7 @@ export const DIVISION_LABELS: Record<Division, string> = {
   la_liga: "La Liga",
   serie_a: "Serie A",
   bundesliga: "Bundesliga",
+  ligue_1: "Ligue 1",
 };
 
 const currencyFormatter = new Intl.NumberFormat("nl-NL", {
