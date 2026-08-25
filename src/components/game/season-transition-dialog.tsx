@@ -21,9 +21,11 @@ import { useGameStore } from "@/store/game-store";
 
 function StatBlock({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg border p-3 text-center">
-      <p className="text-xs text-muted-foreground">{label}</p>
-      <p className="text-lg font-semibold tabular-nums">{value}</p>
+    <div className="rounded-xl border border-white/10 bg-white/5 p-3 text-center">
+      <p className="text-[11px] font-medium tracking-wide text-slate-400 uppercase">
+        {label}
+      </p>
+      <p className="text-lg font-bold text-white tabular-nums">{value}</p>
     </div>
   );
 }
@@ -44,10 +46,12 @@ export function SeasonTransitionDialog() {
 
   return (
     <Dialog open>
-      <DialogContent className="sm:max-w-xl">
+      <DialogContent className="border-white/10 bg-slate-900/95 text-slate-100 backdrop-blur-2xl sm:max-w-xl">
         <DialogHeader>
-          <DialogTitle>Seizoen {formatSeason(summary.season)} afgerond</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="text-white">
+            Seizoen {formatSeason(summary.season)} afgerond
+          </DialogTitle>
+          <DialogDescription className="text-slate-400">
             Seizoenssamenvatting, contractevaluatie en eventuele
             transferaanbiedingen bij {summary.clubName}.
           </DialogDescription>
@@ -63,12 +67,12 @@ export function SeasonTransitionDialog() {
           />
         </div>
 
-        <p className="text-xs text-muted-foreground">
+        <p className="text-xs text-slate-400">
           Marktwaarde: {formatCompactCurrency(summary.startingMarketValue)} →{" "}
           {formatCompactCurrency(summary.endingMarketValue)}{" "}
           <span
             className={
-              summary.marketValueGrowth >= 0 ? "text-emerald-600" : "text-destructive"
+              summary.marketValueGrowth >= 0 ? "text-emerald-400" : "text-rose-400"
             }
           >
             ({summary.marketValueGrowth >= 0 ? "+" : ""}
@@ -76,16 +80,18 @@ export function SeasonTransitionDialog() {
           </span>
         </p>
 
-        <Separator />
+        <Separator className="bg-white/10" />
 
         <div className="flex flex-col gap-2">
-          <p className="text-sm font-medium">Contractaanbod van {contractOffer.clubName}</p>
-          <div className="flex items-center justify-between rounded-lg border p-3">
+          <p className="text-sm font-semibold text-white">
+            Contractaanbod van {contractOffer.clubName}
+          </p>
+          <div className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-3">
             <div>
-              <p className="text-sm font-medium">
+              <p className="text-sm font-medium text-slate-100">
                 {formatCurrency(contractOffer.weeklySalary)} / week
               </p>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-slate-400">
                 {contractOffer.durationYears} jaar ·{" "}
                 {contractOffer.raisePercentage >= 0 ? "+" : ""}
                 {contractOffer.raisePercentage}% t.o.v. huidig salaris
@@ -93,6 +99,7 @@ export function SeasonTransitionDialog() {
             </div>
             <Button
               size="sm"
+              className="bg-emerald-500 text-emerald-950 hover:bg-emerald-400"
               onClick={() => resolveSeasonTransition({ type: "renew-contract" })}
             >
               Teken bij
@@ -102,22 +109,24 @@ export function SeasonTransitionDialog() {
 
         {transferOffers.length > 0 ? (
           <div className="flex flex-col gap-2">
-            <p className="text-sm font-medium">Interesse van andere clubs</p>
+            <p className="text-sm font-semibold text-white">
+              Interesse van andere clubs
+            </p>
             {transferOffers.map((offer) => (
               <div
                 key={offer.clubId}
-                className="flex items-center justify-between gap-3 rounded-lg border p-3"
+                className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/5 p-3"
               >
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="truncate text-sm font-medium">
+                    <span className="truncate text-sm font-medium text-slate-100">
                       {offer.clubName}
                     </span>
-                    <Badge variant="outline">
+                    <Badge variant="outline" className="border-white/15 text-slate-300">
                       {DIVISION_LABELS[offer.division]}
                     </Badge>
                   </div>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-slate-400">
                     {formatCurrency(offer.weeklySalary)} / week · transfersom{" "}
                     {formatCompactCurrency(offer.transferFee)}
                   </p>
@@ -125,6 +134,7 @@ export function SeasonTransitionDialog() {
                 <Button
                   size="sm"
                   variant="outline"
+                  className="border-white/15 bg-white/5 text-slate-100 hover:bg-white/15"
                   onClick={() =>
                     resolveSeasonTransition({
                       type: "accept-transfer",
@@ -138,14 +148,15 @@ export function SeasonTransitionDialog() {
             ))}
           </div>
         ) : (
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-slate-400">
             Geen andere clubs hebben deze offseason interesse getoond.
           </p>
         )}
 
-        <DialogFooter>
+        <DialogFooter className="border-white/10 bg-transparent">
           <Button
             variant="ghost"
+            className="text-slate-400 hover:bg-white/5 hover:text-slate-100"
             onClick={() => resolveSeasonTransition({ type: "reject-all" })}
           >
             Blijf zonder nieuw contract
