@@ -1,0 +1,650 @@
+[
+  {
+    "id": "event-nightclub-vip",
+    "title": "VIP-tafel in de nachtclub",
+    "description": "Na een overwinning nodigen je teamgenoten je uit voor een exclusieve VIP-tafel in de bekendste club van de stad. Het belooft een lange nacht te worden, maar de sfeer in het team is fantastisch.",
+    "choices": [
+      {
+        "id": "join",
+        "label": "Ga mee en vier het groots",
+        "impact": {
+          "morale": 15,
+          "energy": -20,
+          "trainerRelationship": -5,
+          "money": -1500
+        }
+      },
+      {
+        "id": "decline",
+        "label": "Blijf thuis en pak je rust",
+        "impact": {
+          "morale": -5,
+          "energy": 10,
+          "trainerRelationship": 5,
+          "money": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "event-training-fight",
+    "title": "Ruzie op de training",
+    "description": "Tijdens een partijvorm ga je hard door op een ervaren verdediger. Hij pikt het niet en vliegt je aan. De trainer kijkt toe hoe je reageert.",
+    "choices": [
+      {
+        "id": "fight-back",
+        "label": "Duw hem hard terug",
+        "impact": {
+          "morale": -10,
+          "trainerRelationship": -15,
+          "attributes": {
+            "physical": 2
+          }
+        }
+      },
+      {
+        "id": "walk-away",
+        "label": "Loop weg en kalmeer",
+        "impact": {
+          "morale": -5,
+          "trainerRelationship": 10,
+          "attributes": {
+            "discipline": 2
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "event-sponsor-deal",
+    "title": "Lucratieve sponsordeal",
+    "description": "Een bekend sportmerk wil je als gezicht voor hun nieuwe schoenenlijn. De fotoshoot valt echter precies op je enige rustdag deze week.",
+    "choices": [
+      {
+        "id": "accept",
+        "label": "Teken het contract en doe de shoot",
+        "impact": {
+          "money": 25000,
+          "energy": -15,
+          "morale": 5
+        }
+      },
+      {
+        "id": "reject",
+        "label": "Wijs af, rust is belangrijker",
+        "impact": {
+          "energy": 15,
+          "morale": -5,
+          "money": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "event-press-conference",
+    "title": "Kritische journalist",
+    "description": "Na de wedstrijd vraagt een journalist of je wel genoeg inzet toont. Hij insinueert dat je met je hoofd al bij een transfer zit.",
+    "choices": [
+      {
+        "id": "angry",
+        "label": "Reageer fel en verdedig jezelf",
+        "impact": {
+          "morale": 10,
+          "trainerRelationship": -10
+        }
+      },
+      {
+        "id": "diplomatic",
+        "label": "Geef een diplomatiek, saai antwoord",
+        "impact": {
+          "morale": -5,
+          "trainerRelationship": 5
+        }
+      }
+    ]
+  },
+  {
+    "id": "event-extra-training",
+    "title": "Vrijwillige straftraining",
+    "description": "De trainer is ontevreden over de inzet van het team en stelt voor dat de 'echte winnaars' een uur langer blijven om af te werken op doel.",
+    "choices": [
+      {
+        "id": "stay",
+        "label": "Blijf extra trainen",
+        "impact": {
+          "energy": -15,
+          "trainerRelationship": 15,
+          "attributes": {
+            "shooting": 3
+          }
+        }
+      },
+      {
+        "id": "leave",
+        "label": "Ga naar de kleedkamer",
+        "impact": {
+          "energy": 5,
+          "trainerRelationship": -10
+        }
+      }
+    ]
+  },
+  {
+    "id": "event-charity",
+    "title": "Bezoek aan het kinderziekenhuis",
+    "description": "De club vraagt of je vanmiddag mee wilt naar het lokale kinderziekenhuis voor een PR-moment en om de kinderen op te vrolijken.",
+    "choices": [
+      {
+        "id": "go",
+        "label": "Natuurlijk ga ik mee",
+        "impact": {
+          "morale": 15,
+          "energy": -5,
+          "trainerRelationship": 5
+        }
+      },
+      {
+        "id": "skip",
+        "label": "Nee, ik heb andere plannen",
+        "impact": {
+          "morale": -5,
+          "trainerRelationship": -5
+        }
+      }
+    ]
+  },
+  {
+    "id": "event-fan-encounter",
+    "title": "Boze fans bij het stadion",
+    "description": "Na een slechte reeks staan er boze supporters bij de uitgang van het spelershome. Ze eisen uitleg van de spelers.",
+    "choices": [
+      {
+        "id": "talk",
+        "label": "Stap uit en ga het gesprek aan",
+        "impact": {
+          "morale": 10,
+          "trainerRelationship": 5
+        }
+      },
+      {
+        "id": "drive",
+        "label": "Rijd snel door",
+        "impact": {
+          "morale": -10,
+          "trainerRelationship": -5
+        }
+      }
+    ]
+  },
+  {
+    "id": "event-diet-cheat",
+    "title": "Verleiding in het restaurant",
+    "description": "Je bent uit eten met vrienden. Ze bestellen pizza, hamburgers en bier. Jouw dieetschema schrijft kip met rijst voor.",
+    "choices": [
+      {
+        "id": "cheat",
+        "label": "Geniet ervan, één keer maakt niet uit",
+        "impact": {
+          "morale": 10,
+          "energy": -5,
+          "attributes": {
+            "stamina": -1
+          },
+          "money": -150
+        }
+      },
+      {
+        "id": "strict",
+        "label": "Blijf bij je dieet",
+        "impact": {
+          "morale": -5,
+          "attributes": {
+            "stamina": 2
+          },
+          "money": -50
+        }
+      }
+    ]
+  },
+  {
+    "id": "event-agent-offer",
+    "title": "Nieuwe zaakwaarnemer",
+    "description": "Een beruchte maar zeer succesvolle zaakwaarnemer benadert je. Hij belooft je een toptransfer, maar vraagt wel een flink bedrag vooraf.",
+    "choices": [
+      {
+        "id": "accept",
+        "label": "Betaal hem en teken",
+        "impact": {
+          "money": -15000,
+          "morale": 10,
+          "trainerRelationship": -10
+        }
+      },
+      {
+        "id": "decline",
+        "label": "Blijf bij je huidige agent",
+        "impact": {
+          "morale": -5,
+          "trainerRelationship": 5
+        }
+      }
+    ]
+  },
+  {
+    "id": "event-social-media",
+    "title": "Social media rel",
+    "description": "Een oude, onhandige tweet van jou is opgedoken en gaat viral. De perschef van de club eist dat je direct je excuses aanbiedt.",
+    "choices": [
+      {
+        "id": "apologize",
+        "label": "Plaats een officieel excuusbericht",
+        "impact": {
+          "morale": -10,
+          "trainerRelationship": 5
+        }
+      },
+      {
+        "id": "ignore",
+        "label": "Negeer het, het waait wel over",
+        "impact": {
+          "morale": 5,
+          "trainerRelationship": -15
+        }
+      }
+    ]
+  },
+  {
+    "id": "event-veteran-advice",
+    "title": "Advies van de aanvoerder",
+    "description": "De aanvoerder neemt je apart. Hij vindt dat je te veel voor eigen succes gaat en wil dat je na de training met hem aan je passing werkt.",
+    "choices": [
+      {
+        "id": "listen",
+        "label": "Luister en train extra op passing",
+        "impact": {
+          "energy": -10,
+          "attributes": {
+            "passing": 3
+          },
+          "trainerRelationship": 5
+        }
+      },
+      {
+        "id": "dismiss",
+        "label": "Wimpel hem af, jij weet wat je doet",
+        "impact": {
+          "morale": 5,
+          "trainerRelationship": -10,
+          "attributes": {
+            "passing": -1
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "event-gaming-night",
+    "title": "Lange gamesessie",
+    "description": "De nieuwe FIFA is uit. Je speelt online tegen teamgenoten en voor je het weet is het 04:00 's nachts.",
+    "choices": [
+      {
+        "id": "sleep",
+        "label": "Ga direct slapen",
+        "impact": {
+          "morale": 5,
+          "energy": -10
+        }
+      },
+      {
+        "id": "play-on",
+        "label": "Nog één potje...",
+        "impact": {
+          "morale": 15,
+          "energy": -25,
+          "trainerRelationship": -5
+        }
+      }
+    ]
+  },
+  {
+    "id": "event-tactical-dispute",
+    "title": "Tactisch meningsverschil",
+    "description": "De trainer wil dat je in een meer verdedigende rol gaat spelen. Jij voelt je daar totaal niet op je gemak.",
+    "choices": [
+      {
+        "id": "accept",
+        "label": "Slik het in en doe wat hij vraagt",
+        "impact": {
+          "morale": -15,
+          "trainerRelationship": 15,
+          "attributes": {
+            "technique": -1
+          }
+        }
+      },
+      {
+        "id": "argue",
+        "label": "Ga de discussie aan",
+        "impact": {
+          "morale": 5,
+          "trainerRelationship": -20
+        }
+      }
+    ]
+  },
+  {
+    "id": "event-new-boots",
+    "title": "Nieuwe voetbalschoenen",
+    "description": "Je sponsor stuurt je een prototype van hun nieuwste schoen. Ze zijn erg licht, maar zitten nog niet helemaal lekker.",
+    "choices": [
+      {
+        "id": "wear",
+        "label": "Draag ze tijdens de wedstrijd",
+        "impact": {
+          "money": 5000,
+          "attributes": {
+            "pace": 2,
+            "technique": -2
+          }
+        }
+      },
+      {
+        "id": "old",
+        "label": "Blijf bij je vertrouwde schoenen",
+        "impact": {
+          "morale": 5,
+          "money": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "event-car-purchase",
+    "title": "Luxe auto kopen",
+    "description": "Je teamgenoten rijden allemaal in dure sportwagens. Je overweegt om ook een flinke aankoop te doen om erbij te horen.",
+    "choices": [
+      {
+        "id": "buy",
+        "label": "Koop de sportwagen",
+        "impact": {
+          "money": -80000,
+          "morale": 20
+        }
+      },
+      {
+        "id": "save",
+        "label": "Spaar je geld",
+        "impact": {
+          "money": 0,
+          "morale": -5
+        }
+      }
+    ]
+  },
+  {
+    "id": "event-minor-injury",
+    "title": "Lichte pijntjes",
+    "description": "Je voelt je hamstring trekken tijdens de warming-up. Het is niet gescheurd, maar het voelt niet goed.",
+    "choices": [
+      {
+        "id": "play",
+        "label": "Verbijt de pijn en speel",
+        "impact": {
+          "energy": -25,
+          "trainerRelationship": 10,
+          "attributes": {
+            "pace": -2
+          }
+        }
+      },
+      {
+        "id": "rest",
+        "label": "Meld je af bij de fysio",
+        "impact": {
+          "energy": 15,
+          "trainerRelationship": -10,
+          "morale": -10
+        }
+      }
+    ]
+  },
+  {
+    "id": "event-language-course",
+    "title": "Taalcursus",
+    "description": "De club biedt je een intensieve taalcursus aan om beter te communiceren met je buitenlandse teamgenoten. Het kost wel je vrije middagen.",
+    "choices": [
+      {
+        "id": "take",
+        "label": "Volg de cursus",
+        "impact": {
+          "energy": -10,
+          "trainerRelationship": 10,
+          "attributes": {
+            "passing": 2
+          }
+        }
+      },
+      {
+        "id": "skip",
+        "label": "Geen tijd voor",
+        "impact": {
+          "energy": 10,
+          "trainerRelationship": -5
+        }
+      }
+    ]
+  },
+  {
+    "id": "event-rival-taunt",
+    "title": "Provocatie van de rivaal",
+    "description": "Een speler van de aartsrivaal provoceert je in de media voorafgaand aan de derby. Hij noemt je overschat.",
+    "choices": [
+      {
+        "id": "respond",
+        "label": "Sla keihard terug in de pers",
+        "impact": {
+          "morale": 10,
+          "trainerRelationship": -5
+        }
+      },
+      {
+        "id": "silence",
+        "label": "Laat je voeten spreken",
+        "impact": {
+          "morale": -5,
+          "trainerRelationship": 10,
+          "attributes": {
+            "shooting": 1
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "event-gym-buddy",
+    "title": "Trainen met de krachtpatser",
+    "description": "De sterkste speler van het team vraagt of je zijn gym-buddy wilt worden. Zijn schema is loodzwaar.",
+    "choices": [
+      {
+        "id": "join",
+        "label": "Accepteer de uitdaging",
+        "impact": {
+          "energy": -20,
+          "attributes": {
+            "physical": 4,
+            "pace": -1
+          }
+        }
+      },
+      {
+        "id": "decline",
+        "label": "Train op je eigen tempo",
+        "impact": {
+          "energy": 5,
+          "attributes": {
+            "physical": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "event-podcast",
+    "title": "Te gast in een podcast",
+    "description": "Je bent uitgenodigd voor een populaire voetbalpodcast. Ze staan erom bekend pittige en controversiële vragen te stellen.",
+    "choices": [
+      {
+        "id": "honest",
+        "label": "Wees brutaal eerlijk",
+        "impact": {
+          "morale": 15,
+          "trainerRelationship": -15,
+          "money": 1000
+        }
+      },
+      {
+        "id": "safe",
+        "label": "Geef veilige PR-antwoorden",
+        "impact": {
+          "morale": -5,
+          "trainerRelationship": 5,
+          "money": 1000
+        }
+      },
+      {
+        "id": "cancel",
+        "label": "Zeg af",
+        "impact": {
+          "morale": 0,
+          "trainerRelationship": 0,
+          "money": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "event-bad-investment",
+    "title": "Slechte investering",
+    "description": "Een vriend heeft je overgehaald te investeren in een cryptomunt, maar de waarde is zojuist volledig ingestort.",
+    "choices": [
+      {
+        "id": "accept",
+        "label": "Neem je verlies",
+        "impact": {
+          "money": -25000,
+          "morale": -15
+        }
+      },
+      {
+        "id": "double-down",
+        "label": "Koop de dip!",
+        "impact": {
+          "money": -50000,
+          "morale": -5
+        }
+      }
+    ]
+  },
+  {
+    "id": "event-yoga",
+    "title": "Yoga en meditatie",
+    "description": "De clubarts raadt je aan om met yoga te beginnen voor betere flexibiliteit en blessurepreventie. Het klinkt wel een beetje zweverig.",
+    "choices": [
+      {
+        "id": "try",
+        "label": "Geef het een kans",
+        "impact": {
+          "energy": 10,
+          "attributes": {
+            "technique": 2
+          },
+          "money": -200
+        }
+      },
+      {
+        "id": "skip",
+        "label": "Niks voor mij",
+        "impact": {
+          "energy": 0,
+          "morale": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "event-captain-armband",
+    "title": "De aanvoerdersband",
+    "description": "De vaste aanvoerder is geblesseerd. De trainer overweegt jou de band te geven voor de komende wedstrijd, maar het brengt veel druk met zich mee.",
+    "choices": [
+      {
+        "id": "accept",
+        "label": "Neem de verantwoordelijkheid",
+        "impact": {
+          "morale": 10,
+          "trainerRelationship": 10,
+          "energy": -10
+        }
+      },
+      {
+        "id": "decline",
+        "label": "Laat het aan een ander over",
+        "impact": {
+          "morale": -10,
+          "trainerRelationship": -10,
+          "energy": 5
+        }
+      }
+    ]
+  },
+  {
+    "id": "event-night-before",
+    "title": "Slechte nachtrust",
+    "description": "De nacht voor een belangrijke wedstrijd houden feestende buren je wakker. Je hebt amper geslapen.",
+    "choices": [
+      {
+        "id": "coffee",
+        "label": "Drink veel koffie en ga ervoor",
+        "impact": {
+          "energy": -15,
+          "attributes": {
+            "pace": 2,
+            "passing": -2
+          }
+        }
+      },
+      {
+        "id": "tell-coach",
+        "label": "Vertel de trainer dat je niet fit bent",
+        "impact": {
+          "morale": -10,
+          "trainerRelationship": -5,
+          "energy": 10
+        }
+      }
+    ]
+  },
+  {
+    "id": "event-youth-player",
+    "title": "Mentorschap",
+    "description": "Een getalenteerde maar arrogante jeugdspeler is bij de selectie gehaald. De trainer vraagt jou om hem onder je hoede te nemen.",
+    "choices": [
+      {
+        "id": "mentor",
+        "label": "Begeleid hem intensief",
+        "impact": {
+          "energy": -10,
+          "trainerRelationship": 15,
+          "morale": 5
+        }
+      },
+      {
+        "id": "ignore",
+        "label": "Laat hem het zelf uitzoeken",
+        "impact": {
+          "energy": 5,
+          "trainerRelationship": -10
+        }
+      }
+    ]
+  }
+]
