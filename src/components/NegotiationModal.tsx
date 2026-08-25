@@ -24,6 +24,7 @@ import {
   formatCurrency,
 } from "@/lib/game/formatters";
 import { getCurrentClubOffer, getNegotiationBounds } from "@/lib/game/negotiation";
+import { cn } from "@/lib/utils";
 import { useGameStore } from "@/store/game-store";
 import type { ContractTerms, NegotiationSpeaker } from "@/types/negotiation";
 
@@ -33,17 +34,19 @@ function speakerLabel(speaker: NegotiationSpeaker, clubName: string): string {
   return "Jij";
 }
 
-function speakerBadgeVariant(speaker: NegotiationSpeaker) {
-  if (speaker === "club") return "outline" as const;
-  if (speaker === "agent") return "default" as const;
-  return "secondary" as const;
+function speakerBadgeClass(speaker: NegotiationSpeaker): string {
+  if (speaker === "club") return "border-white/15 text-slate-300";
+  if (speaker === "agent") return "bg-amber-500/90 text-amber-950";
+  return "bg-white/10 text-slate-100";
 }
 
 function StatBlock({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg border p-3 text-center">
-      <p className="text-xs text-muted-foreground">{label}</p>
-      <p className="text-base font-semibold tabular-nums">{value}</p>
+    <div className="rounded-xl border border-white/10 bg-white/5 p-3 text-center">
+      <p className="text-[11px] font-medium tracking-wide text-slate-400 uppercase">
+        {label}
+      </p>
+      <p className="text-base font-bold text-white tabular-nums">{value}</p>
     </div>
   );
 }
@@ -70,8 +73,10 @@ function TermSlider({
   return (
     <div className="flex flex-col gap-1.5">
       <div className="flex items-center justify-between text-sm">
-        <Label>{label}</Label>
-        <span className="font-medium tabular-nums">{format(value)}</span>
+        <Label className="text-slate-300">{label}</Label>
+        <span className="font-semibold text-white tabular-nums">
+          {format(value)}
+        </span>
       </div>
       <Slider
         value={[value]}
@@ -140,13 +145,13 @@ export function NegotiationModal() {
 
   return (
     <Dialog open>
-      <DialogContent className="sm:max-w-xl">
+      <DialogContent className="border-white/10 bg-slate-900/95 text-slate-100 backdrop-blur-2xl sm:max-w-xl">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+          <DialogTitle className="flex items-center gap-2 text-white">
             <Handshake className="size-4" />
             Contractonderhandeling met {club.name}
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-slate-400">
             {DIVISION_LABELS[club.division]} · {club.country} · reputatie{" "}
             {club.reputation}
           </DialogDescription>
@@ -160,7 +165,7 @@ export function NegotiationModal() {
         />
 
         {!isFinished ? (
-          <p className="text-xs text-muted-foreground">
+          <p className="text-xs text-slate-400">
             Ronde {round}
             {round > maxRounds
               ? " — de club verliest sneller geduld naarmate dit langer duurt."
@@ -168,10 +173,12 @@ export function NegotiationModal() {
           </p>
         ) : null}
 
-        <Separator />
+        <Separator className="bg-white/10" />
 
         <div className="flex flex-col gap-2">
-          <p className="text-sm font-medium">Huidig bod van {club.name}</p>
+          <p className="text-sm font-semibold text-white">
+            Huidig bod van {club.name}
+          </p>
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
             <StatBlock
               label="Weeksalaris"
@@ -192,20 +199,20 @@ export function NegotiationModal() {
           </div>
         </div>
 
-        <ScrollArea className="h-36 rounded-lg border">
+        <ScrollArea className="h-36 rounded-xl border border-white/10 bg-black/10">
           <ul className="flex flex-col gap-2 p-3">
             {history.map((message) => (
               <li key={message.id} className="flex flex-col gap-0.5 text-sm">
                 <div className="flex items-center gap-2">
-                  <Badge variant={speakerBadgeVariant(message.speaker)}>
+                  <Badge className={speakerBadgeClass(message.speaker)}>
                     {speakerLabel(message.speaker, club.name)}
                   </Badge>
-                  <span className="text-xs text-muted-foreground">
+                  <span className="text-xs text-slate-500">
                     {formatCurrency(message.terms.weeklySalary)}/week ·{" "}
                     {message.terms.contractDurationYears} jaar
                   </span>
                 </div>
-                <p className="text-muted-foreground">{message.message}</p>
+                <p className="text-slate-300">{message.message}</p>
               </li>
             ))}
           </ul>
@@ -213,7 +220,7 @@ export function NegotiationModal() {
 
         {!isFinished ? (
           <div className="flex flex-col gap-3">
-            <p className="text-sm font-medium">Jouw tegenbod</p>
+            <p className="text-sm font-semibold text-white">Jouw tegenbod</p>
             <TermSlider
               label="Weeksalaris"
               value={counterOffer.weeklySalary}
@@ -253,11 +260,12 @@ export function NegotiationModal() {
           </div>
         ) : (
           <p
-            className={
+            className={cn(
+              "rounded-xl border px-3 py-2 text-sm",
               outcome === "accepted"
-                ? "rounded-lg bg-emerald-500/10 px-3 py-2 text-sm text-emerald-600 dark:text-emerald-400"
-                : "rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive"
-            }
+                ? "border-emerald-400/20 bg-emerald-500/10 text-emerald-300"
+                : "border-rose-400/20 bg-rose-500/10 text-rose-300"
+            )}
           >
             {history.at(-1)?.message ??
               (outcome === "accepted"
@@ -266,21 +274,36 @@ export function NegotiationModal() {
           </p>
         )}
 
-        <DialogFooter>
+        <DialogFooter className="border-white/10 bg-transparent">
           {isFinished ? (
-            <Button onClick={dismissNegotiation}>Sluiten</Button>
+            <Button
+              onClick={dismissNegotiation}
+              className="bg-emerald-500 text-emerald-950 hover:bg-emerald-400"
+            >
+              Sluiten
+            </Button>
           ) : (
             <>
-              <Button variant="ghost" onClick={walkAwayFromNegotiation}>
+              <Button
+                variant="ghost"
+                className="text-slate-400 hover:bg-white/5 hover:text-slate-100"
+                onClick={walkAwayFromNegotiation}
+              >
                 Loop weg
               </Button>
               <Button
                 variant="outline"
+                className="border-white/15 bg-white/5 text-slate-100 hover:bg-white/15"
                 onClick={() => submitCounterOffer(counterOffer)}
               >
                 Doe tegenbod
               </Button>
-              <Button onClick={acceptNegotiation}>Akkoord met dit bod</Button>
+              <Button
+                onClick={acceptNegotiation}
+                className="bg-emerald-500 text-emerald-950 hover:bg-emerald-400"
+              >
+                Akkoord met dit bod
+              </Button>
             </>
           )}
         </DialogFooter>

@@ -130,27 +130,37 @@ export function SaveLoadPanel() {
 
   return (
     <>
-      <Button variant="outline" onClick={() => handleOpenChange(true)}>
+      <Button
+        variant="outline"
+        className="border-white/15 bg-white/5 text-slate-100 backdrop-blur-xl hover:bg-white/10"
+        onClick={() => handleOpenChange(true)}
+      >
         <Save className="size-4" />
         Opslaan &amp; laden
       </Button>
 
       <Dialog open={open} onOpenChange={handleOpenChange}>
-        <DialogContent className="sm:max-w-lg">
+        <DialogContent className="border-white/10 bg-slate-900/95 text-slate-100 backdrop-blur-2xl sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle>Opslaan &amp; laden</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-white">Opslaan &amp; laden</DialogTitle>
+            <DialogDescription className="text-slate-400">
               Beheer je save-slots of exporteer/importeer je spel als
               JSON-bestand.
             </DialogDescription>
           </DialogHeader>
 
           <Tabs defaultValue="slots">
-            <TabsList className="w-full">
-              <TabsTrigger value="slots" className="flex-1">
+            <TabsList className="w-full border border-white/10 bg-white/5">
+              <TabsTrigger
+                value="slots"
+                className="flex-1 text-slate-300 data-active:bg-white/10 data-active:text-white"
+              >
                 Save-slots
               </TabsTrigger>
-              <TabsTrigger value="transfer" className="flex-1">
+              <TabsTrigger
+                value="transfer"
+                className="flex-1 text-slate-300 data-active:bg-white/10 data-active:text-white"
+              >
                 Exporteren/importeren
               </TabsTrigger>
             </TabsList>
@@ -158,7 +168,10 @@ export function SaveLoadPanel() {
             <TabsContent value="slots" className="flex flex-col gap-3">
               <div className="flex items-end gap-2">
                 <div className="flex-1">
-                  <Label htmlFor="save-slot-label" className="mb-1 block text-xs">
+                  <Label
+                    htmlFor="save-slot-label"
+                    className="mb-1 block text-xs text-slate-400"
+                  >
                     Naam van de save
                   </Label>
                   <Input
@@ -166,18 +179,22 @@ export function SaveLoadPanel() {
                     value={label}
                     onChange={(event) => setLabel(event.target.value)}
                     placeholder="Bijv. Voor de derby"
+                    className="border-white/15 bg-white/5 text-slate-100 placeholder:text-slate-500"
                   />
                 </div>
-                <Button onClick={handleSave}>
+                <Button
+                  onClick={handleSave}
+                  className="bg-emerald-500 text-emerald-950 hover:bg-emerald-400"
+                >
                   <Save className="size-4" />
                   Opslaan
                 </Button>
               </div>
 
-              <ScrollArea className="h-56 rounded-lg border">
+              <ScrollArea className="h-56 rounded-xl border border-white/10 bg-black/10">
                 <ul className="flex flex-col gap-2 p-3">
                   {slots.length === 0 ? (
-                    <li className="text-sm text-muted-foreground">
+                    <li className="text-sm text-slate-400">
                       Nog geen save-slots. Sla je voortgang op om hier terug te
                       keren.
                     </li>
@@ -185,18 +202,18 @@ export function SaveLoadPanel() {
                     slots.map((slot) => (
                       <li
                         key={slot.id}
-                        className="flex items-center justify-between gap-2 rounded-lg border p-3"
+                        className="flex items-center justify-between gap-2 rounded-xl border border-white/10 bg-white/5 p-3"
                       >
                         <div className="min-w-0">
-                          <p className="truncate text-sm font-medium">
+                          <p className="truncate text-sm font-medium text-slate-100">
                             {slot.label}
                           </p>
-                          <p className="text-xs text-muted-foreground">
+                          <p className="text-xs text-slate-400">
                             Week {slot.week} · Seizoen{" "}
                             {formatSeason(slot.season)} ·{" "}
                             {formatCompactCurrency(slot.balance)}
                           </p>
-                          <p className="text-xs text-muted-foreground">
+                          <p className="text-xs text-slate-500">
                             {formatSavedAt(slot.savedAt)}
                           </p>
                         </div>
@@ -204,6 +221,7 @@ export function SaveLoadPanel() {
                           <Button
                             size="sm"
                             variant="outline"
+                            className="border-white/15 bg-white/5 text-slate-100 hover:bg-white/15"
                             onClick={() => handleLoad(slot.id)}
                           >
                             Laden
@@ -211,24 +229,30 @@ export function SaveLoadPanel() {
                           <AlertDialog>
                             <AlertDialogTrigger
                               render={
-                                <Button size="sm" variant="ghost">
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  className="text-slate-400 hover:bg-white/10 hover:text-slate-100"
+                                >
                                   <Trash2 className="size-4" />
                                 </Button>
                               }
                             />
-                            <AlertDialogContent>
+                            <AlertDialogContent className="border-white/10 bg-slate-900/95 text-slate-100 backdrop-blur-2xl">
                               <AlertDialogHeader>
-                                <AlertDialogTitle>
+                                <AlertDialogTitle className="text-white">
                                   Save verwijderen?
                                 </AlertDialogTitle>
-                                <AlertDialogDescription>
+                                <AlertDialogDescription className="text-slate-400">
                                   &quot;{slot.label}&quot; wordt permanent
                                   verwijderd. Dit kan niet ongedaan worden
                                   gemaakt.
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
-                                <AlertDialogCancel>Annuleren</AlertDialogCancel>
+                                <AlertDialogCancel className="border-white/15 bg-white/5 text-slate-100 hover:bg-white/15">
+                                  Annuleren
+                                </AlertDialogCancel>
                                 <AlertDialogAction
                                   onClick={() => handleDelete(slot.id)}
                                 >
@@ -246,17 +270,25 @@ export function SaveLoadPanel() {
             </TabsContent>
 
             <TabsContent value="transfer" className="flex flex-col gap-3">
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-slate-400">
                 Exporteer je volledige save als JSON-bestand om buiten deze
                 browser te bewaren, of importeer een eerder geëxporteerd
                 bestand.
               </p>
               <div className="flex flex-wrap gap-2">
-                <Button variant="outline" onClick={handleExport}>
+                <Button
+                  variant="outline"
+                  className="border-white/15 bg-white/5 text-slate-100 hover:bg-white/15"
+                  onClick={handleExport}
+                >
                   <Download className="size-4" />
                   Exporteer als JSON
                 </Button>
-                <Button variant="outline" onClick={handleImportClick}>
+                <Button
+                  variant="outline"
+                  className="border-white/15 bg-white/5 text-slate-100 hover:bg-white/15"
+                  onClick={handleImportClick}
+                >
                   <Upload className="size-4" />
                   Importeer JSON
                 </Button>
@@ -274,7 +306,7 @@ export function SaveLoadPanel() {
           {feedback ? (
             <p
               aria-live="polite"
-              className="rounded-lg bg-muted px-3 py-2 text-xs text-muted-foreground"
+              className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs text-slate-300"
             >
               {feedback}
             </p>
