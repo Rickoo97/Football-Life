@@ -3,6 +3,7 @@ import { devtools, persist } from "zustand/middleware";
 
 import { simulateMatch, type MatchReport } from "@/lib/engine/matchEngine";
 import { createFixture } from "@/lib/game/fixtures";
+import { mergePersistedGameState } from "@/lib/game/persistence";
 import {
   getWeeklyAction,
   resolveWeeklyAction,
@@ -245,6 +246,7 @@ export const useGameStore = create<GameStore>()(
         // The dashboard rehydrates manually after mount so the server-rendered
         // markup and the first client render always match.
         skipHydration: true,
+        merge: mergePersistedGameState,
       }
     ),
     { name: "football-life-sim" }
