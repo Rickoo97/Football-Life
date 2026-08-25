@@ -79,6 +79,33 @@ describe("mergePersistedGameState", () => {
     });
   });
 
+  it("replaces corrupted numbers left behind by a NaN save", () => {
+    const current = createInitialGameState();
+    const defaults = createInitialGameState();
+    const corruptedSave = {
+      ...createInitialGameState(),
+      currentWeek: 6,
+      player: {
+        ...defaults.player,
+        energy: null,
+        morale: null,
+      },
+      club: {
+        ...defaults.club,
+        trainerRelationship: null,
+      },
+    };
+
+    const merged = mergePersistedGameState(corruptedSave, current);
+
+    expect(merged.currentWeek).toBe(6);
+    expect(merged.player.energy).toBe(defaults.player.energy);
+    expect(merged.player.morale).toBe(defaults.player.morale);
+    expect(merged.club.trainerRelationship).toBe(
+      defaults.club.trainerRelationship
+    );
+  });
+
   it("repairs a save that is missing whole sections", () => {
     const current = createInitialGameState();
     const merged = mergePersistedGameState({ currentWeek: 7 }, current);
