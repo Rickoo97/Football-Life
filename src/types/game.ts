@@ -6,6 +6,7 @@
  */
 
 import type { MatchReport } from "@/lib/engine/matchEngine";
+import type { NegotiationSession } from "@/types/negotiation";
 import type { SeasonStats, SeasonTransition } from "@/types/season";
 
 // ---------------------------------------------------------------------------
@@ -151,4 +152,6 @@ export interface GameState {
    * decision. `null` outside of that offseason window.
    */
   pendingSeasonTransition: SeasonTransition | null;
+  /** The in-progress contract negotiation with an interested club, if any. */
+  activeNegotiation: NegotiationSession | null;
 }

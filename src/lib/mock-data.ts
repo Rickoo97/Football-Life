@@ -87,5 +87,6 @@ export function createInitialGameState(): GameState {
     lastMatchReport: null,
     seasonStats: createInitialSeasonStats(player.marketValue),
     pendingSeasonTransition: null,
+    activeNegotiation: null,
   };
 }

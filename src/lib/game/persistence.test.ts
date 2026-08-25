@@ -124,6 +124,55 @@ describe("mergePersistedGameState", () => {
     expect(merged.pendingSeasonTransition).toEqual(transition);
   });
 
+  it("discards a corrupted active negotiation instead of crashing", () => {
+    const current = createInitialGameState();
+    const saved = {
+      ...createInitialGameState(),
+      activeNegotiation: { club: { id: "x" }, history: [] },
+    };
+
+    const merged = mergePersistedGameState(saved, current);
+    expect(merged.activeNegotiation).toBeNull();
+  });
+
+  it("keeps a well-formed active negotiation", () => {
+    const current = createInitialGameState();
+    const negotiation = {
+      club: {
+        id: "club-foreign",
+        name: "FC Foreign",
+        division: "premier_league",
+        country: "England",
+        reputation: 80,
+        squadStrength: 78,
+        baseBudget: 50_000_000,
+      },
+      patience: 82,
+      round: 2,
+      maxRounds: 6,
+      history: [
+        {
+          id: "msg-1",
+          speaker: "club",
+          terms: {
+            weeklySalary: 10_000,
+            contractDurationYears: 3,
+            signingBonus: 50_000,
+            goalBonus: 500,
+          },
+          message: "Openingsbod.",
+          patienceAfter: 100,
+        },
+      ],
+      outcome: "in_progress",
+    };
+
+    const saved = { ...createInitialGameState(), activeNegotiation: negotiation };
+    const merged = mergePersistedGameState(saved, current);
+
+    expect(merged.activeNegotiation).toEqual(negotiation);
+  });
+
   it("replaces corrupted numbers left behind by a NaN save", () => {
     const current = createInitialGameState();
     const defaults = createInitialGameState();

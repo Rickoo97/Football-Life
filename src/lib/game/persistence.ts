@@ -1,3 +1,4 @@
+import { sanitizeNegotiationSession } from "@/lib/game/negotiation";
 import { sanitizeSeasonTransition } from "@/lib/game/season";
 import { createInitialGameState } from "@/lib/mock-data";
 import type { GameState, Player, PlayerAttributes } from "@/types/game";
@@ -88,6 +89,9 @@ export function mergePersistedGameState<T extends GameState>(
     seasonStats: mergeSeasonStats(saved.seasonStats, defaults.seasonStats),
     pendingSeasonTransition: saved.pendingSeasonTransition
       ? sanitizeSeasonTransition(saved.pendingSeasonTransition)
+      : null,
+    activeNegotiation: saved.activeNegotiation
+      ? sanitizeNegotiationSession(saved.activeNegotiation)
       : null,
     player: mergePlayer(saved.player, defaults.player),
     club: {

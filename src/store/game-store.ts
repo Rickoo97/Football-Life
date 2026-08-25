@@ -4,6 +4,13 @@ import { devtools, persist } from "zustand/middleware";
 import { simulateMatch, type MatchReport } from "@/lib/engine/matchEngine";
 import { MS_PER_WEEK, WEEKS_PER_SEASON } from "@/lib/game/constants";
 import { createFixture } from "@/lib/game/fixtures";
+import {
+  applyAcceptedNegotiation,
+  createNegotiationSession,
+  evaluateCounterOffer,
+  getCurrentClubOffer,
+  walkAwayFromNegotiation as walkAwayFromNegotiationSession,
+} from "@/lib/game/negotiation";
 import { mergePersistedGameState } from "@/lib/game/persistence";
 import {
   deleteSaveSlot,
@@ -19,6 +26,7 @@ import {
   createSeasonTransition,
   recordMatchInSeasonStats,
 } from "@/lib/game/season";
+import { pickInterestedClub } from "@/lib/game/transfer-market";
 import {
   getWeeklyAction,
   resolveWeeklyAction,
@@ -27,6 +35,7 @@ import {
 } from "@/lib/game/weekly-actions";
 import { createInitialGameState } from "@/lib/mock-data";
 import type { Club, GameEvent, GameState, Player } from "@/types/game";
+import type { ContractTerms, NegotiatingClub } from "@/types/negotiation";
 import type { SaveSlotMetadata } from "@/types/save";
 import type { SeasonTransitionChoice } from "@/types/season";
 
@@ -72,6 +81,7 @@ function toPlainGameState(store: GameState): GameState {
     lastMatchReport: store.lastMatchReport,
     seasonStats: store.seasonStats,
     pendingSeasonTransition: store.pendingSeasonTransition,
+    activeNegotiation: store.activeNegotiation,
   };
 }
 
@@ -92,6 +102,21 @@ export interface GameActions {
   playNextWeek: () => MatchReport;
   /** Applies the player's contract/transfer decision and clears the pending transition. */
   resolveSeasonTransition: (choice: SeasonTransitionChoice) => void;
+  /** Opens a contract negotiation with the given club, replacing any active one. */
+  startNegotiation: (club: NegotiatingClub) => void;
+  /**
+   * Scouts a plausible interested club from the leagues database and opens a
+   * negotiation with it. Returns whether a suitable club was found.
+   */
+  startRandomNegotiation: () => boolean;
+  /** Submits the player's counter-offer and applies the club's response. */
+  submitCounterOffer: (terms: ContractTerms) => void;
+  /** Accepts the club's current offer: the player transfers there immediately. */
+  acceptNegotiation: () => void;
+  /** Ends the negotiation without a deal. */
+  walkAwayFromNegotiation: () => void;
+  /** Clears a finished negotiation (accepted or walked away) after the player closes the modal. */
+  dismissNegotiation: () => void;
   /** Merges `updates` into the current player. */
   updatePlayer: (updates: Partial<Player>) => void;
   /** Merges `updates` into the current player's attributes. */
@@ -311,6 +336,73 @@ export const useGameStore = create<GameStore>()(
               eventLog: [...current.eventLog, createEvent(current, logEntry)],
             };
           }),
+
+        startNegotiation: (club) =>
+          set((current) => ({
+            activeNegotiation: createNegotiationSession(club, current.player),
+          })),
+
+        startRandomNegotiation: () => {
+          const state = get();
+          const club = pickInterestedClub(state.player, state.club.id);
+          if (!club) {
+            return false;
+          }
+          set({ activeNegotiation: createNegotiationSession(club, state.player) });
+          return true;
+        },
+
+        submitCounterOffer: (terms) =>
+          set((current) => {
+            if (!current.activeNegotiation) {
+              return current;
+            }
+            return {
+              activeNegotiation: evaluateCounterOffer(
+                current.activeNegotiation,
+                current.player,
+                terms
+              ),
+            };
+          }),
+
+        acceptNegotiation: () =>
+          set((current) => {
+            if (!current.activeNegotiation) {
+              return current;
+            }
+
+            const { player, club, logEntry } = applyAcceptedNegotiation(
+              current.player,
+              current.activeNegotiation
+            );
+            const terms = getCurrentClubOffer(current.activeNegotiation);
+
+            return {
+              player,
+              club,
+              balance: current.balance + terms.signingBonus,
+              activeNegotiation: {
+                ...current.activeNegotiation,
+                outcome: "accepted",
+              },
+              eventLog: [...current.eventLog, createEvent(current, logEntry)],
+            };
+          }),
+
+        walkAwayFromNegotiation: () =>
+          set((current) => {
+            if (!current.activeNegotiation) {
+              return current;
+            }
+            return {
+              activeNegotiation: walkAwayFromNegotiationSession(
+                current.activeNegotiation
+              ),
+            };
+          }),
+
+        dismissNegotiation: () => set({ activeNegotiation: null }),
 
         updatePlayer: (updates) =>
           set((state) => ({ player: { ...state.player, ...updates } })),

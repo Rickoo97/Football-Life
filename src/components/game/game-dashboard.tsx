@@ -9,6 +9,7 @@ import { PlayerCard } from "@/components/game/player-card";
 import { SeasonTransitionDialog } from "@/components/game/season-transition-dialog";
 import { TopBar } from "@/components/game/top-bar";
 import { WeeklyActionsCard } from "@/components/game/weekly-actions-card";
+import { NegotiationModal } from "@/components/NegotiationModal";
 import { useGameStore } from "@/store/game-store";
 
 function DashboardSkeleton() {
@@ -54,6 +55,7 @@ export function GameDashboard() {
 
       <EventLogCard />
       <SeasonTransitionDialog />
+      <NegotiationModal />
     </div>
   );
 }
