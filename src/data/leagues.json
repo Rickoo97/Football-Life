@@ -1,0 +1,964 @@
+{
+  "leagues": [
+    {
+      "id": "eredivisie",
+      "name": "Dutch Premier Division",
+      "country": "Netherlands",
+      "tier": 1,
+      "clubs": [
+        {
+          "id": "nl-amsterdam-boys",
+          "name": "Amsterdam Boys",
+          "reputation": 84,
+          "squadStrength": 82,
+          "baseBudget": 45000000,
+          "country": "Netherlands"
+        },
+        {
+          "id": "nl-phillips-sport",
+          "name": "Phillips Sport",
+          "reputation": 83,
+          "squadStrength": 83,
+          "baseBudget": 42000000,
+          "country": "Netherlands"
+        },
+        {
+          "id": "nl-rotterdam-haven",
+          "name": "Rotterdam Haven",
+          "reputation": 81,
+          "squadStrength": 80,
+          "baseBudget": 35000000,
+          "country": "Netherlands"
+        },
+        {
+          "id": "nl-alkmaar-kaas",
+          "name": "Alkmaar Kaasstad",
+          "reputation": 75,
+          "squadStrength": 76,
+          "baseBudget": 18000000,
+          "country": "Netherlands"
+        },
+        {
+          "id": "nl-enschede-united",
+          "name": "Enschede United",
+          "reputation": 74,
+          "squadStrength": 75,
+          "baseBudget": 15000000,
+          "country": "Netherlands"
+        },
+        {
+          "id": "nl-utrecht-domstad",
+          "name": "Utrecht Domstad",
+          "reputation": 70,
+          "squadStrength": 72,
+          "baseBudget": 12000000,
+          "country": "Netherlands"
+        },
+        {
+          "id": "nl-arnhem-hertogen",
+          "name": "Arnhem Hertogen",
+          "reputation": 65,
+          "squadStrength": 66,
+          "baseBudget": 8000000,
+          "country": "Netherlands"
+        },
+        {
+          "id": "nl-nijmegen-keizers",
+          "name": "Nijmegen Keizers",
+          "reputation": 64,
+          "squadStrength": 65,
+          "baseBudget": 7500000,
+          "country": "Netherlands"
+        },
+        {
+          "id": "nl-heerenveen-meren",
+          "name": "Heerenveen Meren",
+          "reputation": 63,
+          "squadStrength": 64,
+          "baseBudget": 7000000,
+          "country": "Netherlands"
+        },
+        {
+          "id": "nl-sparta-kasteel",
+          "name": "Sparta Kasteelheren",
+          "reputation": 63,
+          "squadStrength": 64,
+          "baseBudget": 6500000,
+          "country": "Netherlands"
+        },
+        {
+          "id": "nl-deventer-adelaars",
+          "name": "Deventer Adelaars",
+          "reputation": 62,
+          "squadStrength": 63,
+          "baseBudget": 6000000,
+          "country": "Netherlands"
+        },
+        {
+          "id": "nl-groningen-trots",
+          "name": "Groningen Trots",
+          "reputation": 62,
+          "squadStrength": 62,
+          "baseBudget": 6000000,
+          "country": "Netherlands"
+        },
+        {
+          "id": "nl-zwolle-blauwwit",
+          "name": "Zwolle Blauwwit",
+          "reputation": 60,
+          "squadStrength": 61,
+          "baseBudget": 5500000,
+          "country": "Netherlands"
+        },
+        {
+          "id": "nl-sittard-mijnwerkers",
+          "name": "Sittard Mijnwerkers",
+          "reputation": 59,
+          "squadStrength": 60,
+          "baseBudget": 5000000,
+          "country": "Netherlands"
+        },
+        {
+          "id": "nl-tilburg-tricolores",
+          "name": "Tilburg Tricolores",
+          "reputation": 58,
+          "squadStrength": 59,
+          "baseBudget": 4800000,
+          "country": "Netherlands"
+        },
+        {
+          "id": "nl-breda-parels",
+          "name": "Breda Parels",
+          "reputation": 58,
+          "squadStrength": 59,
+          "baseBudget": 4800000,
+          "country": "Netherlands"
+        },
+        {
+          "id": "nl-almere-polder",
+          "name": "Almere Polderboys",
+          "reputation": 55,
+          "squadStrength": 56,
+          "baseBudget": 4000000,
+          "country": "Netherlands"
+        },
+        {
+          "id": "nl-waalwijk-leeuwen",
+          "name": "Waalwijk Leeuwen",
+          "reputation": 54,
+          "squadStrength": 55,
+          "baseBudget": 3500000,
+          "country": "Netherlands"
+        }
+      ]
+    },
+    {
+      "id": "premier_league",
+      "name": "English Premier League",
+      "country": "England",
+      "tier": 1,
+      "clubs": [
+        {
+          "id": "en-manchester-blue",
+          "name": "Manchester Blue Citizens",
+          "reputation": 95,
+          "squadStrength": 94,
+          "baseBudget": 220000000,
+          "country": "England"
+        },
+        {
+          "id": "en-london-gunners",
+          "name": "North London Gunners",
+          "reputation": 91,
+          "squadStrength": 90,
+          "baseBudget": 180000000,
+          "country": "England"
+        },
+        {
+          "id": "en-merseyside-red",
+          "name": "Merseyside Red",
+          "reputation": 92,
+          "squadStrength": 91,
+          "baseBudget": 175000000,
+          "country": "England"
+        },
+        {
+          "id": "en-west-london-blues",
+          "name": "West London Blues",
+          "reputation": 88,
+          "squadStrength": 87,
+          "baseBudget": 160000000,
+          "country": "England"
+        },
+        {
+          "id": "en-manchester-red",
+          "name": "Manchester Red Devils",
+          "reputation": 89,
+          "squadStrength": 86,
+          "baseBudget": 165000000,
+          "country": "England"
+        },
+        {
+          "id": "en-tyneside-magpies",
+          "name": "Tyneside Magpies",
+          "reputation": 85,
+          "squadStrength": 85,
+          "baseBudget": 140000000,
+          "country": "England"
+        },
+        {
+          "id": "en-north-london-whites",
+          "name": "North London Whites",
+          "reputation": 86,
+          "squadStrength": 84,
+          "baseBudget": 130000000,
+          "country": "England"
+        },
+        {
+          "id": "en-birmingham-villans",
+          "name": "Birmingham Villans",
+          "reputation": 83,
+          "squadStrength": 83,
+          "baseBudget": 90000000,
+          "country": "England"
+        },
+        {
+          "id": "en-brighton-seagulls",
+          "name": "South Coast Seagulls",
+          "reputation": 80,
+          "squadStrength": 81,
+          "baseBudget": 65000000,
+          "country": "England"
+        },
+        {
+          "id": "en-east-london-hammers",
+          "name": "East London Hammers",
+          "reputation": 80,
+          "squadStrength": 79,
+          "baseBudget": 70000000,
+          "country": "England"
+        },
+        {
+          "id": "en-west-london-bees",
+          "name": "West London Bees",
+          "reputation": 76,
+          "squadStrength": 77,
+          "baseBudget": 50000000,
+          "country": "England"
+        },
+        {
+          "id": "en-south-london-eagles",
+          "name": "South London Eagles",
+          "reputation": 76,
+          "squadStrength": 76,
+          "baseBudget": 48000000,
+          "country": "England"
+        },
+        {
+          "id": "en-midlands-wolves",
+          "name": "Midlands Wolves",
+          "reputation": 75,
+          "squadStrength": 75,
+          "baseBudget": 45000000,
+          "country": "England"
+        },
+        {
+          "id": "en-thames-cottagers",
+          "name": "Thames Cottagers",
+          "reputation": 75,
+          "squadStrength": 76,
+          "baseBudget": 45000000,
+          "country": "England"
+        },
+        {
+          "id": "en-south-coast-cherries",
+          "name": "South Coast Cherries",
+          "reputation": 74,
+          "squadStrength": 75,
+          "baseBudget": 42000000,
+          "country": "England"
+        },
+        {
+          "id": "en-merseyside-blue",
+          "name": "Merseyside Blue Toffees",
+          "reputation": 75,
+          "squadStrength": 74,
+          "baseBudget": 40000000,
+          "country": "England"
+        },
+        {
+          "id": "en-nottingham-foresters",
+          "name": "Trentside Foresters",
+          "reputation": 73,
+          "squadStrength": 74,
+          "baseBudget": 40000000,
+          "country": "England"
+        },
+        {
+          "id": "en-leicester-foxes",
+          "name": "East Midlands Foxes",
+          "reputation": 73,
+          "squadStrength": 73,
+          "baseBudget": 38000000,
+          "country": "England"
+        },
+        {
+          "id": "en-southampton-saints",
+          "name": "Solent Saints",
+          "reputation": 71,
+          "squadStrength": 71,
+          "baseBudget": 32000000,
+          "country": "England"
+        },
+        {
+          "id": "en-ipswich-tractors",
+          "name": "Suffolk Tractors",
+          "reputation": 68,
+          "squadStrength": 69,
+          "baseBudget": 28000000,
+          "country": "England"
+        }
+      ]
+    },
+    {
+      "id": "la_liga",
+      "name": "Spanish First League",
+      "country": "Spain",
+      "tier": 1,
+      "clubs": [
+        {
+          "id": "es-madrid-royals",
+          "name": "Madrid Royals",
+          "reputation": 96,
+          "squadStrength": 95,
+          "baseBudget": 240000000,
+          "country": "Spain"
+        },
+        {
+          "id": "es-catalunya-fc",
+          "name": "Catalunya Blaugrana",
+          "reputation": 94,
+          "squadStrength": 92,
+          "baseBudget": 190000000,
+          "country": "Spain"
+        },
+        {
+          "id": "es-madrid-colchoneros",
+          "name": "Madrid Mattressmakers",
+          "reputation": 89,
+          "squadStrength": 88,
+          "baseBudget": 120000000,
+          "country": "Spain"
+        },
+        {
+          "id": "es-basque-lions",
+          "name": "Bilbao Basque Lions",
+          "reputation": 82,
+          "squadStrength": 82,
+          "baseBudget": 60000000,
+          "country": "Spain"
+        },
+        {
+          "id": "es-san-sebastian-txuri",
+          "name": "San Sebastián Txuri",
+          "reputation": 81,
+          "squadStrength": 81,
+          "baseBudget": 55000000,
+          "country": "Spain"
+        },
+        {
+          "id": "es-girona-catalan-pride",
+          "name": "Girona Red-Whites",
+          "reputation": 79,
+          "squadStrength": 80,
+          "baseBudget": 45000000,
+          "country": "Spain"
+        },
+        {
+          "id": "es-villarreal-yellow-sub",
+          "name": "Villarreal Yellow Subs",
+          "reputation": 80,
+          "squadStrength": 79,
+          "baseBudget": 50000000,
+          "country": "Spain"
+        },
+        {
+          "id": "es-sevilla-andalucia",
+          "name": "Sevilla Nervión",
+          "reputation": 79,
+          "squadStrength": 77,
+          "baseBudget": 45000000,
+          "country": "Spain"
+        },
+        {
+          "id": "es-sevilla-betis-green",
+          "name": "Sevilla Betis Verde",
+          "reputation": 80,
+          "squadStrength": 79,
+          "baseBudget": 48000000,
+          "country": "Spain"
+        },
+        {
+          "id": "es-valencia-bats",
+          "name": "Valencia Bats",
+          "reputation": 77,
+          "squadStrength": 75,
+          "baseBudget": 38000000,
+          "country": "Spain"
+        },
+        {
+          "id": "es-pamplona-bulls",
+          "name": "Pamplona Red Bulls",
+          "reputation": 73,
+          "squadStrength": 74,
+          "baseBudget": 28000000,
+          "country": "Spain"
+        },
+        {
+          "id": "es-vigo-celts",
+          "name": "Galicia Sky Blues",
+          "reputation": 73,
+          "squadStrength": 73,
+          "baseBudget": 26000000,
+          "country": "Spain"
+        },
+        {
+          "id": "es-mallorca-islanders",
+          "name": "Mallorca Vermilions",
+          "reputation": 72,
+          "squadStrength": 73,
+          "baseBudget": 25000000,
+          "country": "Spain"
+        },
+        {
+          "id": "es-vallecas-lightning",
+          "name": "Madrid Red Ray",
+          "reputation": 71,
+          "squadStrength": 72,
+          "baseBudget": 22000000,
+          "country": "Spain"
+        },
+        {
+          "id": "es-vitoria-gloriosos",
+          "name": "Vitoria Gloriosos",
+          "reputation": 70,
+          "squadStrength": 71,
+          "baseBudget": 20000000,
+          "country": "Spain"
+        },
+        {
+          "id": "es-getafe-blue-suburbs",
+          "name": "Getafe Azulones",
+          "reputation": 70,
+          "squadStrength": 71,
+          "baseBudget": 20000000,
+          "country": "Spain"
+        },
+        {
+          "id": "es-las-palmas-yellows",
+          "name": "Gran Canaria Yellows",
+          "reputation": 69,
+          "squadStrength": 70,
+          "baseBudget": 18000000,
+          "country": "Spain"
+        },
+        {
+          "id": "es-leganes-cucumber",
+          "name": "Leganés Pepineros",
+          "reputation": 66,
+          "squadStrength": 67,
+          "baseBudget": 15000000,
+          "country": "Spain"
+        },
+        {
+          "id": "es-valladolid-purple",
+          "name": "Valladolid Pucela",
+          "reputation": 66,
+          "squadStrength": 67,
+          "baseBudget": 15000000,
+          "country": "Spain"
+        },
+        {
+          "id": "es-barcelona-parakeets",
+          "name": "Barcelona Parakeets",
+          "reputation": 68,
+          "squadStrength": 68,
+          "baseBudget": 16000000,
+          "country": "Spain"
+        }
+      ]
+    },
+    {
+      "id": "bundesliga",
+      "name": "German Premier League",
+      "country": "Germany",
+      "tier": 1,
+      "clubs": [
+        {
+          "id": "de-bavaria-munich",
+          "name": "Bavaria München",
+          "reputation": 95,
+          "squadStrength": 94,
+          "baseBudget": 230000000,
+          "country": "Germany"
+        },
+        {
+          "id": "de-leverkusen-pharma",
+          "name": "Leverkusen Pharma Werkself",
+          "reputation": 90,
+          "squadStrength": 90,
+          "baseBudget": 110000000,
+          "country": "Germany"
+        },
+        {
+          "id": "de-dortmund-black-yellow",
+          "name": "Dortmund Black-Yellows",
+          "reputation": 89,
+          "squadStrength": 88,
+          "baseBudget": 120000000,
+          "country": "Germany"
+        },
+        {
+          "id": "de-leipzig-energy",
+          "name": "Leipzig Red Energy",
+          "reputation": 86,
+          "squadStrength": 86,
+          "baseBudget": 100000000,
+          "country": "Germany"
+        },
+        {
+          "id": "de-stuttgart-swabians",
+          "name": "Stuttgart Swabians",
+          "reputation": 82,
+          "squadStrength": 82,
+          "baseBudget": 55000000,
+          "country": "Germany"
+        },
+        {
+          "id": "de-frankfurt-eagles",
+          "name": "Frankfurt Eagles",
+          "reputation": 82,
+          "squadStrength": 81,
+          "baseBudget": 52000000,
+          "country": "Germany"
+        },
+        {
+          "id": "de-wolfsburg-auto",
+          "name": "Wolfsburg Autocity",
+          "reputation": 78,
+          "squadStrength": 78,
+          "baseBudget": 45000000,
+          "country": "Germany"
+        },
+        {
+          "id": "de-freiburg-black-forest",
+          "name": "Freiburg Black Forest",
+          "reputation": 77,
+          "squadStrength": 77,
+          "baseBudget": 35000000,
+          "country": "Germany"
+        },
+        {
+          "id": "de-hoffenheim-village",
+          "name": "Hoffenheim Tech Village",
+          "reputation": 76,
+          "squadStrength": 76,
+          "baseBudget": 38000000,
+          "country": "Germany"
+        },
+        {
+          "id": "de-bremen-river-islanders",
+          "name": "Bremen River Islanders",
+          "reputation": 75,
+          "squadStrength": 75,
+          "baseBudget": 30000000,
+          "country": "Germany"
+        },
+        {
+          "id": "de-monchengladbach-foals",
+          "name": "Gladbach Young Foals",
+          "reputation": 75,
+          "squadStrength": 75,
+          "baseBudget": 32000000,
+          "country": "Germany"
+        },
+        {
+          "id": "de-augsburg-fugger",
+          "name": "Augsburg Fugger City",
+          "reputation": 72,
+          "squadStrength": 73,
+          "baseBudget": 25000000,
+          "country": "Germany"
+        },
+        {
+          "id": "de-mainz-carnival",
+          "name": "Mainz Carnival Kings",
+          "reputation": 72,
+          "squadStrength": 72,
+          "baseBudget": 24000000,
+          "country": "Germany"
+        },
+        {
+          "id": "de-union-berlin-iron",
+          "name": "Berlin Iron Foresters",
+          "reputation": 74,
+          "squadStrength": 73,
+          "baseBudget": 28000000,
+          "country": "Germany"
+        },
+        {
+          "id": "de-heidenheim-castle",
+          "name": "Heidenheim Hilltown",
+          "reputation": 71,
+          "squadStrength": 72,
+          "baseBudget": 20000000,
+          "country": "Germany"
+        },
+        {
+          "id": "de-bochum-miners",
+          "name": "Bochum Deep Miners",
+          "reputation": 69,
+          "squadStrength": 70,
+          "baseBudget": 18000000,
+          "country": "Germany"
+        },
+        {
+          "id": "de-st-pauli-pirates",
+          "name": "Hamburg Pirate Harbor",
+          "reputation": 70,
+          "squadStrength": 69,
+          "baseBudget": 18000000,
+          "country": "Germany"
+        },
+        {
+          "id": "de-holstein-storks",
+          "name": "Kiel Northern Storks",
+          "reputation": 65,
+          "squadStrength": 66,
+          "baseBudget": 14000000,
+          "country": "Germany"
+        }
+      ]
+    },
+    {
+      "id": "serie_a",
+      "name": "Italian Super League",
+      "country": "Italy",
+      "tier": 1,
+      "clubs": [
+        {
+          "id": "it-milano-black-blue",
+          "name": "Milano Nerazzurri",
+          "reputation": 92,
+          "squadStrength": 91,
+          "baseBudget": 150000000,
+          "country": "Italy"
+        },
+        {
+          "id": "it-juve-turin-zebra",
+          "name": "Piedmont Old Lady",
+          "reputation": 91,
+          "squadStrength": 89,
+          "baseBudget": 140000000,
+          "country": "Italy"
+        },
+        {
+          "id": "it-milano-red-black",
+          "name": "Milano Rossoneri Devils",
+          "reputation": 89,
+          "squadStrength": 88,
+          "baseBudget": 130000000,
+          "country": "Italy"
+        },
+        {
+          "id": "it-napoli-vesuvio",
+          "name": "Napoli Blue Azure",
+          "reputation": 88,
+          "squadStrength": 87,
+          "baseBudget": 115000000,
+          "country": "Italy"
+        },
+        {
+          "id": "it-bergamo-goddess",
+          "name": "Bergamo Goddess",
+          "reputation": 85,
+          "squadStrength": 85,
+          "baseBudget": 75000000,
+          "country": "Italy"
+        },
+        {
+          "id": "it-rome-wolves",
+          "name": "Capital City Wolves",
+          "reputation": 84,
+          "squadStrength": 83,
+          "baseBudget": 70000000,
+          "country": "Italy"
+        },
+        {
+          "id": "it-rome-eagles",
+          "name": "Lazio Sky Eagles",
+          "reputation": 83,
+          "squadStrength": 82,
+          "baseBudget": 60000000,
+          "country": "Italy"
+        },
+        {
+          "id": "it-florence-lilies",
+          "name": "Florence Purple Lilies",
+          "reputation": 80,
+          "squadStrength": 80,
+          "baseBudget": 50000000,
+          "country": "Italy"
+        },
+        {
+          "id": "it-bologna-scholars",
+          "name": "Bologna Red-Blues",
+          "reputation": 79,
+          "squadStrength": 79,
+          "baseBudget": 42000000,
+          "country": "Italy"
+        },
+        {
+          "id": "it-turin-bulls",
+          "name": "Torino Maroon Bulls",
+          "reputation": 76,
+          "squadStrength": 76,
+          "baseBudget": 35000000,
+          "country": "Italy"
+        },
+        {
+          "id": "it-genoa-griffins",
+          "name": "Genoa Harbor Griffins",
+          "reputation": 74,
+          "squadStrength": 74,
+          "baseBudget": 28000000,
+          "country": "Italy"
+        },
+        {
+          "id": "it-udine-little-zebras",
+          "name": "Friuli Little Zebras",
+          "reputation": 73,
+          "squadStrength": 73,
+          "baseBudget": 26000000,
+          "country": "Italy"
+        },
+        {
+          "id": "it-monza-speedway",
+          "name": "Monza Speedway White-Reds",
+          "reputation": 73,
+          "squadStrength": 73,
+          "baseBudget": 28000000,
+          "country": "Italy"
+        },
+        {
+          "id": "it-parma-dukes",
+          "name": "Parma Ducal Crociati",
+          "reputation": 72,
+          "squadStrength": 72,
+          "baseBudget": 24000000,
+          "country": "Italy"
+        },
+        {
+          "id": "it-verona-mastiffs",
+          "name": "Verona Yellow Mastiffs",
+          "reputation": 71,
+          "squadStrength": 71,
+          "baseBudget": 22000000,
+          "country": "Italy"
+        },
+        {
+          "id": "it-cagliari-islanders",
+          "name": "Sardinia Islanders",
+          "reputation": 71,
+          "squadStrength": 71,
+          "baseBudget": 20000000,
+          "country": "Italy"
+        },
+        {
+          "id": "it-lecce-salento-wolves",
+          "name": "Salento Yellow-Reds",
+          "reputation": 70,
+          "squadStrength": 70,
+          "baseBudget": 18000000,
+          "country": "Italy"
+        },
+        {
+          "id": "it-empoli-blues",
+          "name": "Tuscan Azure Blues",
+          "reputation": 69,
+          "squadStrength": 70,
+          "baseBudget": 16000000,
+          "country": "Italy"
+        },
+        {
+          "id": "it-como-lake-lakeside",
+          "name": "Lake Como Azure",
+          "reputation": 71,
+          "squadStrength": 72,
+          "baseBudget": 35000000,
+          "country": "Italy"
+        },
+        {
+          "id": "it-venice-winged-lions",
+          "name": "Venice Lagoon Arancioneroverde",
+          "reputation": 68,
+          "squadStrength": 68,
+          "baseBudget": 18000000,
+          "country": "Italy"
+        }
+      ]
+    },
+    {
+      "id": "ligue_1",
+      "name": "French Championship League",
+      "country": "France",
+      "tier": 1,
+      "clubs": [
+        {
+          "id": "fr-paris-billionaires",
+          "name": "Paris Capital Red-Blue",
+          "reputation": 94,
+          "squadStrength": 93,
+          "baseBudget": 260000000,
+          "country": "France"
+        },
+        {
+          "id": "fr-monaco-principality",
+          "name": "Monaco Principality Red-Whites",
+          "reputation": 84,
+          "squadStrength": 84,
+          "baseBudget": 80000000,
+          "country": "France"
+        },
+        {
+          "id": "fr-marseille-olympians",
+          "name": "Mediterranean Olympians",
+          "reputation": 83,
+          "squadStrength": 83,
+          "baseBudget": 75000000,
+          "country": "France"
+        },
+        {
+          "id": "fr-lyon-rhone-lions",
+          "name": "Rhône Valley Lions",
+          "reputation": 81,
+          "squadStrength": 81,
+          "baseBudget": 60000000,
+          "country": "France"
+        },
+        {
+          "id": "fr-lille-northern-dogs",
+          "name": "Flanders Red Mastiffs",
+          "reputation": 81,
+          "squadStrength": 81,
+          "baseBudget": 55000000,
+          "country": "France"
+        },
+        {
+          "id": "fr-nice-riviera-eagles",
+          "name": "Riviera Gym Eaglets",
+          "reputation": 79,
+          "squadStrength": 80,
+          "baseBudget": 50000000,
+          "country": "France"
+        },
+        {
+          "id": "fr-rennes-breton-strikers",
+          "name": "Brittany Red-Blacks",
+          "reputation": 78,
+          "squadStrength": 78,
+          "baseBudget": 45000000,
+          "country": "France"
+        },
+        {
+          "id": "fr-lens-blood-gold",
+          "name": "Artois Miners Blood-Gold",
+          "reputation": 78,
+          "squadStrength": 78,
+          "baseBudget": 40000000,
+          "country": "France"
+        },
+        {
+          "id": "fr-brest-pirate-corsairs",
+          "name": "Finistère Pirate Armor",
+          "reputation": 76,
+          "squadStrength": 77,
+          "baseBudget": 30000000,
+          "country": "France"
+        },
+        {
+          "id": "fr-reims-champagne-kings",
+          "name": "Champagne Coronation Kings",
+          "reputation": 74,
+          "squadStrength": 74,
+          "baseBudget": 26000000,
+          "country": "France"
+        },
+        {
+          "id": "fr-strasbourg-alsace-storks",
+          "name": "Alsace Blue Racing",
+          "reputation": 74,
+          "squadStrength": 75,
+          "baseBudget": 32000000,
+          "country": "France"
+        },
+        {
+          "id": "fr-toulouse-violets",
+          "name": "Occitanie Violets",
+          "reputation": 73,
+          "squadStrength": 73,
+          "baseBudget": 24000000,
+          "country": "France"
+        },
+        {
+          "id": "fr-nantes-canaries",
+          "name": "Loire Yellow Canaries",
+          "reputation": 72,
+          "squadStrength": 72,
+          "baseBudget": 22000000,
+          "country": "France"
+        },
+        {
+          "id": "fr-montpellier-orange-blues",
+          "name": "Languedoc Sunburst",
+          "reputation": 72,
+          "squadStrength": 72,
+          "baseBudget": 20000000,
+          "country": "France"
+        },
+        {
+          "id": "fr-auxerre-burgundy-diplomats",
+          "name": "Burgundy Youth Academy",
+          "reputation": 69,
+          "squadStrength": 70,
+          "baseBudget": 18000000,
+          "country": "France"
+        },
+        {
+          "id": "fr-saint-etienne-green-miners",
+          "name": "Forez Saint Greens",
+          "reputation": 71,
+          "squadStrength": 70,
+          "baseBudget": 20000000,
+          "country": "France"
+        },
+        {
+          "id": "fr-le-havre-doyen-pioneers",
+          "name": "Normandy Blue Sky Doyens",
+          "reputation": 68,
+          "squadStrength": 68,
+          "baseBudget": 15000000,
+          "country": "France"
+        },
+        {
+          "id": "fr-angers-black-white-scouts",
+          "name": "Anjou Black-Whites",
+          "reputation": 67,
+          "squadStrength": 67,
+          "baseBudget": 14000000,
+          "country": "France"
+        }
+      ]
+    }
+  ]
+}
