@@ -55,6 +55,7 @@ function createState(overrides: Partial<GameState> = {}): GameState {
     lastMatchReport: null,
     seasonStats: createInitialSeasonStats(PLAYER.marketValue),
     pendingSeasonTransition: null,
+    activeNegotiation: null,
     ...overrides,
   };
 }

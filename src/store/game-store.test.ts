@@ -1,7 +1,19 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { WEEKS_PER_SEASON } from "@/lib/game/constants";
+import { computeWageCeiling } from "@/lib/game/negotiation";
 import { useGameStore } from "./game-store";
+import type { NegotiatingClub } from "@/types/negotiation";
+
+const NEGOTIATION_CLUB: NegotiatingClub = {
+  id: "club-negotiation-test",
+  name: "FC Negotiation Test",
+  division: "premier_league",
+  country: "England",
+  reputation: 85,
+  squadStrength: 84,
+  baseBudget: 150_000_000,
+};
 
 beforeEach(() => {
   useGameStore.getState().resetGame();
@@ -129,6 +141,110 @@ describe("save slots", () => {
 
   it("fails to load an unknown slot without throwing", () => {
     expect(useGameStore.getState().loadFromSlot("does-not-exist")).toBe(false);
+  });
+});
+
+describe("negotiation", () => {
+  it("starts a negotiation with the club's opening bid", () => {
+    useGameStore.getState().startNegotiation(NEGOTIATION_CLUB);
+
+    const { activeNegotiation } = useGameStore.getState();
+    expect(activeNegotiation).not.toBeNull();
+    expect(activeNegotiation?.club.id).toBe(NEGOTIATION_CLUB.id);
+    expect(activeNegotiation?.patience).toBe(100);
+    expect(activeNegotiation?.history).toHaveLength(1);
+  });
+
+  it("lowers patience more for a wildly unrealistic counter-offer", () => {
+    useGameStore.getState().startNegotiation(NEGOTIATION_CLUB);
+    const ceiling = computeWageCeiling(NEGOTIATION_CLUB);
+
+    useGameStore.getState().submitCounterOffer({
+      weeklySalary: ceiling * 10,
+      contractDurationYears: 5,
+      signingBonus: ceiling * 50,
+      goalBonus: ceiling * 2,
+    });
+
+    const state = useGameStore.getState();
+    expect(state.activeNegotiation?.patience).toBeLessThan(100);
+  });
+
+  it("collapses the deal once patience hits zero after repeated overreach", () => {
+    useGameStore.getState().startNegotiation(NEGOTIATION_CLUB);
+    const ceiling = computeWageCeiling(NEGOTIATION_CLUB);
+    const outrageousAsk = {
+      weeklySalary: ceiling * 20,
+      contractDurationYears: 5,
+      signingBonus: ceiling * 100,
+      goalBonus: ceiling * 5,
+    };
+
+    for (let round = 0; round < 10; round += 1) {
+      if (useGameStore.getState().activeNegotiation?.outcome !== "in_progress") {
+        break;
+      }
+      useGameStore.getState().submitCounterOffer(outrageousAsk);
+    }
+
+    const state = useGameStore.getState();
+    expect(state.activeNegotiation?.outcome).toBe("walked_away");
+    expect(state.activeNegotiation?.patience).toBe(0);
+  });
+
+  it("switches the player to the new club immediately when a deal is accepted", () => {
+    useGameStore.getState().startNegotiation(NEGOTIATION_CLUB);
+    const offer = useGameStore.getState().activeNegotiation?.history[0].terms;
+    expect(offer).toBeDefined();
+
+    const balanceBefore = useGameStore.getState().balance;
+    useGameStore.getState().acceptNegotiation();
+
+    const state = useGameStore.getState();
+    expect(state.club.id).toBe(NEGOTIATION_CLUB.id);
+    expect(state.player.clubId).toBe(NEGOTIATION_CLUB.id);
+    expect(state.player.weeklySalary).toBe(offer!.weeklySalary);
+    expect(state.balance).toBe(balanceBefore + offer!.signingBonus);
+    expect(state.activeNegotiation?.outcome).toBe("accepted");
+
+    useGameStore.getState().dismissNegotiation();
+    expect(useGameStore.getState().activeNegotiation).toBeNull();
+  });
+
+  it("leaves the player at their current club after walking away", () => {
+    useGameStore.getState().startNegotiation(NEGOTIATION_CLUB);
+    const clubBefore = useGameStore.getState().club.id;
+
+    useGameStore.getState().walkAwayFromNegotiation();
+
+    const state = useGameStore.getState();
+    expect(state.club.id).toBe(clubBefore);
+    expect(state.activeNegotiation?.outcome).toBe("walked_away");
+
+    useGameStore.getState().dismissNegotiation();
+    expect(useGameStore.getState().activeNegotiation).toBeNull();
+  });
+
+  it("scouts a random interested club from the leagues database", () => {
+    const found = useGameStore.getState().startRandomNegotiation();
+
+    expect(found).toBe(true);
+    const { activeNegotiation } = useGameStore.getState();
+    expect(activeNegotiation).not.toBeNull();
+    expect(activeNegotiation?.club.id).not.toBe(useGameStore.getState().club.id);
+  });
+
+  it("does nothing when submitting a counter-offer without an active negotiation", () => {
+    const before = useGameStore.getState();
+    useGameStore.getState().submitCounterOffer({
+      weeklySalary: 1000,
+      contractDurationYears: 1,
+      signingBonus: 0,
+      goalBonus: 0,
+    });
+    const after = useGameStore.getState();
+
+    expect(after).toEqual(before);
   });
 });
 
