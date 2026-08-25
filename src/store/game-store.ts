@@ -5,6 +5,7 @@ import { simulateMatch, type MatchReport } from "@/lib/engine/matchEngine";
 import { MS_PER_WEEK, WEEKS_PER_SEASON } from "@/lib/game/constants";
 import { createFixture } from "@/lib/game/fixtures";
 import {
+  acceptNegotiationSession,
   applyAcceptedNegotiation,
   createNegotiationSession,
   evaluateCounterOffer,
@@ -405,20 +406,18 @@ export const useGameStore = create<GameStore>()(
               return current;
             }
 
+            const accepted = acceptNegotiationSession(current.activeNegotiation);
             const { player, club, logEntry } = applyAcceptedNegotiation(
               current.player,
-              current.activeNegotiation
+              accepted
             );
-            const terms = getCurrentClubOffer(current.activeNegotiation);
+            const terms = getCurrentClubOffer(accepted);
 
             return {
               player,
               club,
               balance: current.balance + terms.signingBonus,
-              activeNegotiation: {
-                ...current.activeNegotiation,
-                outcome: "accepted",
-              },
+              activeNegotiation: accepted,
               eventLog: [...current.eventLog, createEvent(current, logEntry)],
             };
           }),

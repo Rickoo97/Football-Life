@@ -1,3 +1,7 @@
+import {
+  GREEDY_OVERREACH_THRESHOLD,
+  pickAgentDialogue,
+} from "@/data/agentDialogues";
 import { getPositionAttackWeight } from "@/lib/engine/matchEngine";
 import { formatCurrency } from "@/lib/game/formatters";
 import type { Club, GameEventType, Player } from "@/types/game";
@@ -132,9 +136,9 @@ export function createNegotiationSession(
 
   const openingMessage: NegotiationMessage = {
     id: createMessageId(),
-    speaker: "club",
+    speaker: "agent",
     terms: openingOffer,
-    message: `${club.name} doet via je zaakwaarnemer een openingsbod. Ze zijn benieuwd naar jouw reactie.`,
+    message: pickAgentDialogue("lowball", random, { club: club.name }),
     patienceAfter: 100,
   };
 
@@ -150,10 +154,10 @@ export function createNegotiationSession(
 
 /** The most recent offer the club has put on the table. */
 export function getCurrentClubOffer(session: NegotiationSession): ContractTerms {
-  const lastClubMessage = [...session.history]
+  const lastOfferMessage = [...session.history]
     .reverse()
-    .find((message) => message.speaker === "club");
-  return lastClubMessage?.terms ?? session.history[0].terms;
+    .find((message) => message.speaker !== "player");
+  return lastOfferMessage?.terms ?? session.history[0].terms;
 }
 
 /**
@@ -198,7 +202,7 @@ export function computeOverreach(
 }
 
 function describeOverreach(overreach: number, clubName: string): string {
-  if (overreach >= 0.6) {
+  if (overreach >= GREEDY_OVERREACH_THRESHOLD) {
     return `Dat is compleet onrealistisch. ${clubName} is duidelijk geïrriteerd, maar doet nog een klein tegenbod.`;
   }
   if (overreach >= 0.25) {
@@ -227,7 +231,8 @@ function moveTowards(
 export function evaluateCounterOffer(
   session: NegotiationSession,
   player: Player,
-  playerAsk: ContractTerms
+  playerAsk: ContractTerms,
+  random: () => number = Math.random
 ): NegotiationSession {
   if (session.outcome !== "in_progress") {
     return session;
@@ -262,9 +267,9 @@ export function evaluateCounterOffer(
   if (nextPatience <= 0) {
     const collapseMessage: NegotiationMessage = {
       id: createMessageId(),
-      speaker: "club",
+      speaker: "agent",
       terms: getCurrentClubOffer(session),
-      message: `${session.club.name} trekt het aanbod terug. Hun geduld is op.`,
+      message: pickAgentDialogue("collapsed", random, { club: session.club.name }),
       patienceAfter: 0,
     };
 
@@ -323,11 +328,14 @@ export function evaluateCounterOffer(
     ),
   };
 
+  const isGreedyAsk = overreach >= GREEDY_OVERREACH_THRESHOLD;
   const clubMessage: NegotiationMessage = {
     id: createMessageId(),
-    speaker: "club",
+    speaker: isGreedyAsk ? "agent" : "club",
     terms: clubCounter,
-    message: describeOverreach(overreach, session.club.name),
+    message: isGreedyAsk
+      ? pickAgentDialogue("greedy", random, { club: session.club.name })
+      : describeOverreach(overreach, session.club.name),
     patienceAfter: nextPatience,
   };
 
@@ -342,12 +350,50 @@ export function evaluateCounterOffer(
 
 /** The player walks away without a deal. Pure. */
 export function walkAwayFromNegotiation(
-  session: NegotiationSession
+  session: NegotiationSession,
+  random: () => number = Math.random
 ): NegotiationSession {
   if (session.outcome !== "in_progress") {
     return session;
   }
-  return { ...session, outcome: "walked_away" };
+
+  const collapseMessage: NegotiationMessage = {
+    id: createMessageId(),
+    speaker: "agent",
+    terms: getCurrentClubOffer(session),
+    message: pickAgentDialogue("collapsed", random, { club: session.club.name }),
+    patienceAfter: session.patience,
+  };
+
+  return {
+    ...session,
+    outcome: "walked_away",
+    history: [...session.history, collapseMessage],
+  };
+}
+
+/** Marks the session as accepted and adds the agent's closing line. Pure. */
+export function acceptNegotiationSession(
+  session: NegotiationSession,
+  random: () => number = Math.random
+): NegotiationSession {
+  if (session.outcome !== "in_progress") {
+    return session;
+  }
+
+  const successMessage: NegotiationMessage = {
+    id: createMessageId(),
+    speaker: "agent",
+    terms: getCurrentClubOffer(session),
+    message: pickAgentDialogue("success", random, { club: session.club.name }),
+    patienceAfter: session.patience,
+  };
+
+  return {
+    ...session,
+    outcome: "accepted",
+    history: [...session.history, successMessage],
+  };
 }
 
 export interface NegotiationResolution {
@@ -437,7 +483,8 @@ export function sanitizeNegotiationSession(
     const candidateMessage = message as Partial<NegotiationMessage>;
     return (
       (candidateMessage.speaker === "club" ||
-        candidateMessage.speaker === "player") &&
+        candidateMessage.speaker === "player" ||
+        candidateMessage.speaker === "agent") &&
       typeof candidateMessage.terms === "object" &&
       candidateMessage.terms !== null &&
       isFiniteNumber((candidateMessage.terms as ContractTerms).weeklySalary)
