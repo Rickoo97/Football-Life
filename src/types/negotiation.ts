@@ -30,7 +30,7 @@ export interface NegotiatingClub {
   baseBudget: number;
 }
 
-export type NegotiationSpeaker = "club" | "player";
+export type NegotiationSpeaker = "club" | "player" | "agent";
 
 /** One line of the negotiation transcript. */
 export interface NegotiationMessage {
