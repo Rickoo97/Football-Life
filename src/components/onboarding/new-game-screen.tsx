@@ -79,7 +79,12 @@ export function NewGameScreen() {
           <Separator />
 
           <div className="flex flex-col gap-2 sm:flex-row">
-            <Button size="lg" className="sm:flex-1" render={<Link href="/dashboard" />}>
+            <Button
+              size="lg"
+              className="sm:flex-1"
+              nativeButton={false}
+              render={<Link href="/dashboard" />}
+            >
               Verder spelen
             </Button>
             <Button
