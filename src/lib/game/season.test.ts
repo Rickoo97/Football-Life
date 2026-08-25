@@ -25,12 +25,14 @@ const PLAYER: Player = {
   id: "player-test",
   name: "Test Speler",
   age: 24,
+  nationality: "NL",
   position: "ST",
   energy: 80,
   morale: 65,
   attributes: {
     shooting: 70,
     passing: 60,
+    defending: 35,
     physical: 65,
     pace: 72,
     technique: 68,
@@ -56,6 +58,7 @@ function createState(overrides: Partial<GameState> = {}): GameState {
     seasonStats: createInitialSeasonStats(PLAYER.marketValue),
     pendingSeasonTransition: null,
     activeNegotiation: null,
+    careerStarted: true,
     ...overrides,
   };
 }

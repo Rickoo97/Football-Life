@@ -93,11 +93,13 @@ export function getWeeklyAction(id: WeeklyActionId): WeeklyAction {
 function getTrainingFocus(player: Player): Partial<PlayerAttributes> {
   switch (player.position) {
     case "GK":
+      return { defending: 1, physical: 1 };
     case "CB":
     case "LB":
     case "RB":
-      return { physical: 1, pace: 1 };
+      return { defending: 1, physical: 1, pace: 1 };
     case "CDM":
+      return { defending: 1, passing: 1 };
     case "CM":
       return { passing: 1, technique: 1 };
     case "CAM":

@@ -85,7 +85,12 @@ function normalizeRating(value: number): number {
   return clamp(value, 0, 100) / 100;
 }
 
-function getPositionAttackWeight(position: PlayerPosition): number {
+/**
+ * How much of a position's contribution comes from attacking play (1) versus
+ * defensive work (0). Shared with the contract valuation so both judge a
+ * centre-back on the same terms.
+ */
+export function getPositionAttackWeight(position: PlayerPosition): number {
   switch (position) {
     case "GK":
       return 0.1;
@@ -145,20 +150,27 @@ function getPositionFatigueWeight(position: PlayerPosition): number {
 function computeImpactScore(player: PlayerMatchContext): number {
   const shooting = normalizeRating(player.attributes.shooting);
   const passing = normalizeRating(player.attributes.passing);
+  const defending = normalizeRating(player.attributes.defending);
   const physical = normalizeRating(player.attributes.physical);
   const pace = normalizeRating(player.attributes.pace);
   const technique = normalizeRating(player.attributes.technique);
   const morale = normalizeRating(player.morale);
   const energy = normalizeRating(player.energy);
 
-  const technical =
+  const positionWeight = getPositionAttackWeight(player.position);
+  // The further back a player lines up, the more of their contribution comes
+  // from defensive work rather than from goals and assists.
+  const defensiveShare = (1 - positionWeight) * 0.35;
+
+  const attackingSkill =
     shooting * 0.28 +
     passing * 0.22 +
     technique * 0.2 +
     physical * 0.15 +
     pace * 0.15;
+  const technical =
+    attackingSkill * (1 - defensiveShare) + defending * defensiveShare;
   const condition = morale * 0.46 + energy * 0.54;
-  const positionWeight = getPositionAttackWeight(player.position);
 
   return clamp(technical * 0.64 + condition * 0.36, 0, 1) * positionWeight;
 }

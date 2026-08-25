@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useSyncExternalStore } from "react";
+import { useRouter } from "next/navigation";
 
 import { ClubCard } from "@/components/game/club-card";
 import { EventLogCard } from "@/components/game/event-log-card";
@@ -26,6 +27,8 @@ function DashboardSkeleton() {
 }
 
 export function GameDashboard() {
+  const router = useRouter();
+  const careerStarted = useGameStore((state) => state.careerStarted);
   const hydrated = useSyncExternalStore(
     (onStoreChange) => useGameStore.persist.onFinishHydration(onStoreChange),
     () => useGameStore.persist.hasHydrated(),
@@ -36,7 +39,15 @@ export function GameDashboard() {
     void useGameStore.persist.rehydrate();
   }, []);
 
-  if (!hydrated) {
+  // Without a created player the dashboard would show placeholder data, so
+  // send anyone who lands here first through the onboarding flow.
+  useEffect(() => {
+    if (hydrated && !careerStarted) {
+      router.replace("/");
+    }
+  }, [hydrated, careerStarted, router]);
+
+  if (!hydrated || !careerStarted) {
     return <DashboardSkeleton />;
   }
 

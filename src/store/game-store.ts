@@ -13,6 +13,10 @@ import {
 } from "@/lib/game/negotiation";
 import { mergePersistedGameState } from "@/lib/game/persistence";
 import {
+  createPlayerFromForm,
+  type NewGameFormValues,
+} from "@/lib/game/player-creation";
+import {
   deleteSaveSlot,
   exportGameStateToJson,
   importGameStateFromJson,
@@ -82,10 +86,16 @@ function toPlainGameState(store: GameState): GameState {
     seasonStats: store.seasonStats,
     pendingSeasonTransition: store.pendingSeasonTransition,
     activeNegotiation: store.activeNegotiation,
+    careerStarted: store.careerStarted,
   };
 }
 
 export interface GameActions {
+  /**
+   * Starts a brand new career from the onboarding form: wipes any existing
+   * save state and seeds the player with position-based starting attributes.
+   */
+  createCareer: (values: NewGameFormValues) => void;
   /** Spends `amount` action points if enough are available. Returns whether it succeeded. */
   spendActionPoints: (amount: number) => boolean;
   /**
@@ -153,6 +163,29 @@ export const useGameStore = create<GameStore>()(
     persist(
       (set, get) => ({
         ...createInitialGameState(),
+
+        createCareer: (values) => {
+          const initial = createInitialGameState();
+          const player = createPlayerFromForm(values, initial.club.id);
+
+          set({
+            ...initial,
+            player,
+            careerStarted: true,
+            seasonStats: createInitialSeasonStats(player.marketValue),
+            eventLog: [
+              {
+                id: crypto.randomUUID(),
+                season: initial.season,
+                week: initial.currentWeek,
+                date: initial.currentDate,
+                type: "contract",
+                title: "Carrière gestart",
+                description: `${player.name} tekent zijn eerste contract bij ${initial.club.name}.`,
+              },
+            ],
+          });
+        },
 
         spendActionPoints: (amount) => {
           const { actionPoints } = get();
