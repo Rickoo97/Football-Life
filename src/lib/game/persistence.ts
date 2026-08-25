@@ -1,5 +1,7 @@
+import { sanitizeSeasonTransition } from "@/lib/game/season";
 import { createInitialGameState } from "@/lib/mock-data";
 import type { GameState, Player, PlayerAttributes } from "@/types/game";
+import type { SeasonStats } from "@/types/season";
 
 /**
  * Saves written by older builds can miss fields that were added later, and a
@@ -22,6 +24,22 @@ function mergeAttributes(
     pace: numberOr(saved?.pace, defaults.pace),
     technique: numberOr(saved?.technique, defaults.technique),
     stamina: numberOr(saved?.stamina, defaults.stamina),
+  };
+}
+
+function mergeSeasonStats(
+  saved: Partial<SeasonStats> | undefined,
+  defaults: SeasonStats
+): SeasonStats {
+  return {
+    matchesPlayed: numberOr(saved?.matchesPlayed, defaults.matchesPlayed),
+    goals: numberOr(saved?.goals, defaults.goals),
+    assists: numberOr(saved?.assists, defaults.assists),
+    ratingSum: numberOr(saved?.ratingSum, defaults.ratingSum),
+    startingMarketValue: numberOr(
+      saved?.startingMarketValue,
+      defaults.startingMarketValue
+    ),
   };
 }
 
@@ -67,6 +85,10 @@ export function mergePersistedGameState<T extends GameState>(
     balance: numberOr(saved.balance, defaults.balance),
     lastMatchReport: saved.lastMatchReport ?? null,
     eventLog: Array.isArray(saved.eventLog) ? saved.eventLog : defaults.eventLog,
+    seasonStats: mergeSeasonStats(saved.seasonStats, defaults.seasonStats),
+    pendingSeasonTransition: saved.pendingSeasonTransition
+      ? sanitizeSeasonTransition(saved.pendingSeasonTransition)
+      : null,
     player: mergePlayer(saved.player, defaults.player),
     club: {
       ...defaults.club,

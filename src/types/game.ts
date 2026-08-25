@@ -6,6 +6,7 @@
  */
 
 import type { MatchReport } from "@/lib/engine/matchEngine";
+import type { SeasonStats, SeasonTransition } from "@/types/season";
 
 // ---------------------------------------------------------------------------
 // Player
@@ -142,4 +143,11 @@ export interface GameState {
   eventLog: GameEvent[];
   /** Report of the most recently played match, if any. */
   lastMatchReport: MatchReport | null;
+  /** Accumulated performance for the season currently in progress. */
+  seasonStats: SeasonStats;
+  /**
+   * Set once a season ends, until the player resolves the contract/transfer
+   * decision. `null` outside of that offseason window.
+   */
+  pendingSeasonTransition: SeasonTransition | null;
 }

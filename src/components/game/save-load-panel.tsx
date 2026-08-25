@@ -1,0 +1,286 @@
+"use client";
+
+import { useRef, useState, type ChangeEvent } from "react";
+import { Download, Save, Trash2, Upload } from "lucide-react";
+
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { formatCompactCurrency, formatSeason } from "@/lib/game/formatters";
+import { useGameStore } from "@/store/game-store";
+import type { SaveSlotMetadata } from "@/types/save";
+
+function formatSavedAt(iso: string): string {
+  return new Intl.DateTimeFormat("nl-NL", {
+    day: "2-digit",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(new Date(iso));
+}
+
+export function SaveLoadPanel() {
+  const [open, setOpen] = useState(false);
+  const [slots, setSlots] = useState<SaveSlotMetadata[]>([]);
+  const [label, setLabel] = useState("");
+  const [feedback, setFeedback] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const currentWeek = useGameStore((state) => state.currentWeek);
+  const currentSeason = useGameStore((state) => state.season);
+  const saveToSlot = useGameStore((state) => state.saveToSlot);
+  const loadFromSlot = useGameStore((state) => state.loadFromSlot);
+  const deleteSlot = useGameStore((state) => state.deleteSlot);
+  const listSlots = useGameStore((state) => state.listSlots);
+  const exportSave = useGameStore((state) => state.exportSave);
+  const importSave = useGameStore((state) => state.importSave);
+
+  const refreshSlots = () => setSlots(listSlots());
+
+  const handleOpenChange = (nextOpen: boolean) => {
+    setOpen(nextOpen);
+    if (nextOpen) {
+      setLabel(`Week ${currentWeek} · Seizoen ${formatSeason(currentSeason)}`);
+      setFeedback(null);
+      refreshSlots();
+    }
+  };
+
+  const handleSave = () => {
+    const metadata = saveToSlot(label);
+    if (metadata) {
+      setFeedback(`Opgeslagen als "${metadata.label}".`);
+      refreshSlots();
+    } else {
+      setFeedback(
+        "Opslaan is mislukt. Is LocalStorage beschikbaar in deze browser?"
+      );
+    }
+  };
+
+  const handleLoad = (slotId: string) => {
+    const success = loadFromSlot(slotId);
+    setFeedback(success ? "Save geladen." : "Laden is mislukt.");
+    if (success) {
+      setOpen(false);
+    }
+  };
+
+  const handleDelete = (slotId: string) => {
+    deleteSlot(slotId);
+    refreshSlots();
+  };
+
+  const handleExport = () => {
+    const json = exportSave();
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = `football-life-sim-week${currentWeek}-seizoen${currentSeason}.json`;
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+    URL.revokeObjectURL(url);
+    setFeedback("Save geëxporteerd als JSON-bestand.");
+  };
+
+  const handleImportClick = () => fileInputRef.current?.click();
+
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) {
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const text = typeof reader.result === "string" ? reader.result : "";
+      const success = importSave(text);
+      setFeedback(
+        success ? "Save geïmporteerd." : "Dit bestand kon niet worden ingeladen."
+      );
+      if (success) {
+        setOpen(false);
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  return (
+    <>
+      <Button variant="outline" onClick={() => handleOpenChange(true)}>
+        <Save className="size-4" />
+        Opslaan &amp; laden
+      </Button>
+
+      <Dialog open={open} onOpenChange={handleOpenChange}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Opslaan &amp; laden</DialogTitle>
+            <DialogDescription>
+              Beheer je save-slots of exporteer/importeer je spel als
+              JSON-bestand.
+            </DialogDescription>
+          </DialogHeader>
+
+          <Tabs defaultValue="slots">
+            <TabsList className="w-full">
+              <TabsTrigger value="slots" className="flex-1">
+                Save-slots
+              </TabsTrigger>
+              <TabsTrigger value="transfer" className="flex-1">
+                Exporteren/importeren
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="slots" className="flex flex-col gap-3">
+              <div className="flex items-end gap-2">
+                <div className="flex-1">
+                  <Label htmlFor="save-slot-label" className="mb-1 block text-xs">
+                    Naam van de save
+                  </Label>
+                  <Input
+                    id="save-slot-label"
+                    value={label}
+                    onChange={(event) => setLabel(event.target.value)}
+                    placeholder="Bijv. Voor de derby"
+                  />
+                </div>
+                <Button onClick={handleSave}>
+                  <Save className="size-4" />
+                  Opslaan
+                </Button>
+              </div>
+
+              <ScrollArea className="h-56 rounded-lg border">
+                <ul className="flex flex-col gap-2 p-3">
+                  {slots.length === 0 ? (
+                    <li className="text-sm text-muted-foreground">
+                      Nog geen save-slots. Sla je voortgang op om hier terug te
+                      keren.
+                    </li>
+                  ) : (
+                    slots.map((slot) => (
+                      <li
+                        key={slot.id}
+                        className="flex items-center justify-between gap-2 rounded-lg border p-3"
+                      >
+                        <div className="min-w-0">
+                          <p className="truncate text-sm font-medium">
+                            {slot.label}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            Week {slot.week} · Seizoen{" "}
+                            {formatSeason(slot.season)} ·{" "}
+                            {formatCompactCurrency(slot.balance)}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {formatSavedAt(slot.savedAt)}
+                          </p>
+                        </div>
+                        <div className="flex shrink-0 gap-1">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleLoad(slot.id)}
+                          >
+                            Laden
+                          </Button>
+                          <AlertDialog>
+                            <AlertDialogTrigger
+                              render={
+                                <Button size="sm" variant="ghost">
+                                  <Trash2 className="size-4" />
+                                </Button>
+                              }
+                            />
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>
+                                  Save verwijderen?
+                                </AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  &quot;{slot.label}&quot; wordt permanent
+                                  verwijderd. Dit kan niet ongedaan worden
+                                  gemaakt.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Annuleren</AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() => handleDelete(slot.id)}
+                                >
+                                  Verwijderen
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </div>
+                      </li>
+                    ))
+                  )}
+                </ul>
+              </ScrollArea>
+            </TabsContent>
+
+            <TabsContent value="transfer" className="flex flex-col gap-3">
+              <p className="text-sm text-muted-foreground">
+                Exporteer je volledige save als JSON-bestand om buiten deze
+                browser te bewaren, of importeer een eerder geëxporteerd
+                bestand.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <Button variant="outline" onClick={handleExport}>
+                  <Download className="size-4" />
+                  Exporteer als JSON
+                </Button>
+                <Button variant="outline" onClick={handleImportClick}>
+                  <Upload className="size-4" />
+                  Importeer JSON
+                </Button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="application/json"
+                  className="hidden"
+                  onChange={handleFileChange}
+                />
+              </div>
+            </TabsContent>
+          </Tabs>
+
+          {feedback ? (
+            <p
+              aria-live="polite"
+              className="rounded-lg bg-muted px-3 py-2 text-xs text-muted-foreground"
+            >
+              {feedback}
+            </p>
+          ) : null}
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+}
