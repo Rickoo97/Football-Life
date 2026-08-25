@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
+import { GREEDY_OVERREACH_THRESHOLD, isAgentDialogue } from "@/data/agentDialogues";
+import type { Player } from "@/types/game";
+import type { ContractTerms, NegotiatingClub, NegotiationSession } from "@/types/negotiation";
 import {
+  acceptNegotiationSession,
   applyAcceptedNegotiation,
   computeFairTerms,
   computeOverreach,
@@ -14,8 +18,6 @@ import {
   sanitizeNegotiationSession,
   walkAwayFromNegotiation,
 } from "./negotiation";
-import type { Player } from "@/types/game";
-import type { ContractTerms, NegotiatingClub, NegotiationSession } from "@/types/negotiation";
 
 const RICH_CLUB: NegotiatingClub = {
   id: "club-rich",
@@ -145,7 +147,12 @@ describe("createNegotiationSession", () => {
     expect(session.round).toBe(1);
     expect(session.outcome).toBe("in_progress");
     expect(session.history).toHaveLength(1);
-    expect(session.history[0].speaker).toBe("club");
+    expect(session.history[0].speaker).toBe("agent");
+    expect(
+      isAgentDialogue("lowball", session.history[0].message, {
+        club: RICH_CLUB.name,
+      })
+    ).toBe(true);
   });
 });
 
@@ -205,6 +212,36 @@ describe("evaluateCounterOffer", () => {
 
     expect(session.outcome).toBe("walked_away");
     expect(session.patience).toBe(0);
+
+    const lastMessage = session.history[session.history.length - 1];
+    expect(lastMessage.speaker).toBe("agent");
+    expect(
+      isAgentDialogue("collapsed", lastMessage.message, { club: POOR_CLUB.name })
+    ).toBe(true);
+  });
+
+  it("uses a greedy agent line when the player asks far too much", () => {
+    const session = createNegotiationSession(RICH_CLUB, STAR_PLAYER, seededRandom(5));
+    const fair = computeFairTerms(RICH_CLUB, STAR_PLAYER);
+    const wildAsk: ContractTerms = {
+      weeklySalary: computeWageCeiling(RICH_CLUB) * 3,
+      contractDurationYears: 5,
+      signingBonus: fair.signingBonus * 8,
+      goalBonus: fair.goalBonus * 8,
+    };
+
+    expect(computeOverreach(RICH_CLUB, fair, wildAsk)).toBeGreaterThanOrEqual(
+      GREEDY_OVERREACH_THRESHOLD
+    );
+
+    const result = evaluateCounterOffer(session, STAR_PLAYER, wildAsk, () => 0);
+    expect(result.outcome).toBe("in_progress");
+
+    const agentReply = result.history[result.history.length - 1];
+    expect(agentReply.speaker).toBe("agent");
+    expect(
+      isAgentDialogue("greedy", agentReply.message, { club: RICH_CLUB.name })
+    ).toBe(true);
   });
 
   it("makes the club counter closer to a modest ask than to a wild one", () => {
@@ -256,6 +293,34 @@ describe("getNegotiationBounds", () => {
 
     expect(richBounds.weeklySalary[1]).toBeGreaterThan(poorBounds.weeklySalary[1]);
     expect(richBounds.contractDurationYears).toEqual([1, 5]);
+  });
+});
+
+describe("acceptNegotiationSession", () => {
+  it("adds a success line from the agent when the deal is signed", () => {
+    const session = createNegotiationSession(RICH_CLUB, STAR_PLAYER, seededRandom(11));
+    const accepted = acceptNegotiationSession(session, () => 0);
+
+    expect(accepted.outcome).toBe("accepted");
+    const lastMessage = accepted.history[accepted.history.length - 1];
+    expect(lastMessage.speaker).toBe("agent");
+    expect(
+      isAgentDialogue("success", lastMessage.message, { club: RICH_CLUB.name })
+    ).toBe(true);
+  });
+});
+
+describe("walkAwayFromNegotiation", () => {
+  it("adds a collapsed agent line when the player walks away", () => {
+    const session = createNegotiationSession(RICH_CLUB, STAR_PLAYER, seededRandom(8));
+    const walkedAway = walkAwayFromNegotiation(session, () => 0);
+
+    expect(walkedAway.outcome).toBe("walked_away");
+    const lastMessage = walkedAway.history[walkedAway.history.length - 1];
+    expect(lastMessage.speaker).toBe("agent");
+    expect(
+      isAgentDialogue("collapsed", lastMessage.message, { club: RICH_CLUB.name })
+    ).toBe(true);
   });
 });
 

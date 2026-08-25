@@ -25,7 +25,19 @@ import {
 } from "@/lib/game/formatters";
 import { getCurrentClubOffer, getNegotiationBounds } from "@/lib/game/negotiation";
 import { useGameStore } from "@/store/game-store";
-import type { ContractTerms } from "@/types/negotiation";
+import type { ContractTerms, NegotiationSpeaker } from "@/types/negotiation";
+
+function speakerLabel(speaker: NegotiationSpeaker, clubName: string): string {
+  if (speaker === "club") return clubName;
+  if (speaker === "agent") return "Zaakwaarnemer";
+  return "Jij";
+}
+
+function speakerBadgeVariant(speaker: NegotiationSpeaker) {
+  if (speaker === "club") return "outline" as const;
+  if (speaker === "agent") return "default" as const;
+  return "secondary" as const;
+}
 
 function StatBlock({ label, value }: { label: string; value: string }) {
   return (
@@ -185,10 +197,8 @@ export function NegotiationModal() {
             {history.map((message) => (
               <li key={message.id} className="flex flex-col gap-0.5 text-sm">
                 <div className="flex items-center gap-2">
-                  <Badge
-                    variant={message.speaker === "club" ? "outline" : "secondary"}
-                  >
-                    {message.speaker === "club" ? club.name : "Jij"}
+                  <Badge variant={speakerBadgeVariant(message.speaker)}>
+                    {speakerLabel(message.speaker, club.name)}
                   </Badge>
                   <span className="text-xs text-muted-foreground">
                     {formatCurrency(message.terms.weeklySalary)}/week ·{" "}
@@ -249,9 +259,10 @@ export function NegotiationModal() {
                 : "rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive"
             }
           >
-            {outcome === "accepted"
-              ? `Deal! Je hebt getekend bij ${club.name}.`
-              : `${club.name} heeft de onderhandelingen afgebroken. Hun geduld raakte op.`}
+            {history.at(-1)?.message ??
+              (outcome === "accepted"
+                ? `Deal! Je hebt getekend bij ${club.name}.`
+                : `${club.name} heeft de onderhandelingen afgebroken. Hun geduld raakte op.`)}
           </p>
         )}
 
